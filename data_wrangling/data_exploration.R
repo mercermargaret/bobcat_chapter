@@ -9,9 +9,6 @@
 # load packages
 library (ctmm)
 
-# loading in coati data from example dataset, for reference
-data("coati")
-
 # loading in gps data as csv
 data <- read.csv("data/bobcat_locs_all.csv")
 
