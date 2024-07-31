@@ -25,24 +25,24 @@ margaret <- as.telemetry(margaret_gps)
 summary(margaret)
 
 # plotting!
-plot(margaret ,
-       error = 2 ,
-       level.UD = 0.50) # this doesn't work great because we don't know the error yet. thats ok.
+# plot(margaret ,
+      # error = 2 ,
+      # level.UD = 0.50) # this doesn't work great because we don't know the error yet. thats ok.
 
 # ID outliers
 outliers <- outlie(margaret)
-plot(outliers)
+# plot(outliers)
 
 # get rid of outliers in margaret
 outlier_t <- outliers$t[outliers$speed >= .40]
 margaret <- margaret[!margaret$t %in% outlier_t, ]
 
 # replot data
-plot(margaret,
-       error = 2 ,
-       level.UD = 0.50)
+# plot(margaret,
+       # error = 2 ,
+       # level.UD = 0.50)
 outliers <- outlie(margaret)
-plot(outliers)
+# plot(outliers)
 
 # make a variogram
 vg <- variogram(margaret)
@@ -60,11 +60,11 @@ fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes
 summary(fits)
 
 # plot variogram and model
-plot(vg, CTMM = fits)
+# plot(vg, CTMM = fits)
 
 # THEN do other stuff...
 
-
+save(fits, file = "margaret_ctmm.Rda")
 
 
 
