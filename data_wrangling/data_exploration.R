@@ -12,6 +12,7 @@ library (ctmm)
 # loading in gps data as csv
 data <- read.csv("data/bobcat_locs_all.csv")
 
+
 # pulling out one bobcat. a beautiful bobcat. a talented bobcat. a brilliant bobcat.
 # a bobcat
 # named
