@@ -70,13 +70,13 @@ guess$error <- TRUE
 #
 
 # only run the following code chunk if running on the hpc
-# fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes like 24 hours!
-# # run this on the hpc!!
-# # this ran and spit output into margaret_ctmm.Rda
-# save(fits, file = "margaret_ctmm.Rda")
+fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes like 24 hours!
+# run this on the hpc!!
+# this ran and spit output into margaret_ctmm.Rda
+save(fits, file = "margaret_ctmm.Rda")
 
-# only run the following code chunk if running in R studio
-load('data/margaret_ctmm.Rda')
+# # only run the following code chunk if running in R studio
+# load('data/margaret_ctmm.Rda')
 
 # return a summary of the fitted models
 summary(fits) # this should list a model $name, $DOF, and $CI
