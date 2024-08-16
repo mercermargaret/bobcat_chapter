@@ -56,6 +56,7 @@ vg <- variogram(margaret)
 
 # Guesstimate the model to obtain initial parameter values
 guess <- ctmm.guess(margaret,
+                    CTMM = ctmm(error = 10),
                         variogram = vg,
                         interactive = FALSE)
 guess$error <- TRUE
@@ -80,7 +81,7 @@ plot(vg, CTMM = fits)
 # THEN, with model and data in had, do the other stuff...
 
 # estimate average speed
-speed(margaret, fits)
+speed(margaret, fits, fast=TRUE)
 # Error in sqrt(diff(data$x)^2 + diff(data$y)^2)/DT/SPD: non-numeric argument to binary operator
 # speed <- speed(margaret, fits, cores = -1, fast = TRUE)
 # just loads forever and doesn't make progress :')
@@ -139,7 +140,7 @@ for (i in 1:length(days)) {
 
 # Finally bind results together as a data frame
 results <- as.data.frame(do.call(rbind, results))
-results$date <- as.Date (days)
+results$date <- as.Date(days)
 head(results)
 
 
@@ -153,7 +154,7 @@ summary(margaret_akde)
 # Create a function that scales colours between red and blue
 rbPal <- colorRampPalette(c('#FF0000','#046C9A'))
 # Then create a variable that scales from red to blue between the two times
-margaret$Col <- rbPal(nrow(margaret))[as.numeric(cut(margaret$t,breaks = nrow(margaret)))]
+margaret$Col <- rbPal(nrow(margaret))[as.numeric(cut(margaret$t, breaks = nrow(margaret)))]
 # Plot the AKDE range estimate, with the relocation data, coloured by time
 plot(margaret,
      UD = margaret_akde,
