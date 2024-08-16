@@ -6,13 +6,13 @@
     # see: https://static-content.springer.com/esm/art%3A10.1186%2Fs40462-019-0177-1/MediaObjects/40462_2019_177_MOESM2_ESM.pdf
     # and: https://zslpublications.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Facv.12728&file=acv12728-sup-0002-AppendixS2.pdf
 
-install.packages("proj4")
-install.packages("foreach")
-install.packages("doParallel")
-install.packages("sf")
-install.packages("raster")
-install.packages("adehabitatHR")
-install.packages("tidyverse")
+# install.packages("proj4")
+# install.packages("foreach")
+# install.packages("doParallel")
+# install.packages("sf")
+# install.packages("raster")
+# install.packages("adehabitatHR")
+# install.packages("tidyverse")
 
 # load packages
 library(ctmm)
