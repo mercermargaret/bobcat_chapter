@@ -146,5 +146,6 @@ write.csv(bridges_in_range, "data/subset_bridges")
 # visually assess all bridges in google maps, mark ends of bridges, delete duplicates and errors, and 
 # mark new bridges found in the process
 
+# download google sheet as csv and import here to summarize
 bridges <- read.csv("data/Bridges - final.csv")
 

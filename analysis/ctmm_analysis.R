@@ -9,14 +9,21 @@
 # load packages
 library(ctmm)
 library(proj4)
-library(rgdal)
+# library(rgdal) # rgdal doesn't exist apparently ughghgh
 library(foreach)
 library(doParallel)
+library(sf)
+library(raster)
+library(adehabitatHR)
+library(tidyverse)
+
+# clear workspace
+rm(list=ls())
 
 # loading in gps data as csv
 data <- read.csv("data/bobcat_locs_all.csv")
 
-# all this from Noonan 2019 ####
+# data prep from Noonan 2019 ####
 margaret_gps <- data[data$individual.local.identifier == "BC #12 Margaret", ]
 summary(margaret_gps)
 
@@ -52,53 +59,44 @@ guess <- ctmm.guess(margaret,
                         variogram = vg,
                         interactive = FALSE)
 guess$error <- TRUE
+#
 
-fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes like 24 hours!
-# run this on the hpc!!
+# only run the following code chunk if running on the hpc
+# fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes like 24 hours!
+# # run this on the hpc!!
+# # this ran and spit output into margaret_ctmm.Rda
+# save(fits, file = "margaret_ctmm.Rda")
 
-# # results of Margaret: $name
-# [1] "OUF anisotropic error"
-# 
-# $DOF
-# mean        area   diffusion       speed 
-# 841.0483495 478.8594468  66.9396815   0.2145813 
-# 
-# $CI
-#                                           low        est         high
-# area (square kilometers)          8.614783e+00   9.441605 1.030577e+01
-# τ[position] (hours)               1.045637e+01  11.556108 1.277151e+01
-# τ[velocity] (minutes)             1.176433e-06  12.133369 1.251398e+08
-# speed (kilometers/day)            8.089032e-03  24.957827 6.759088e+01
-# diffusion (square kilometers/day) 1.580028e+00   2.039031 2.555674e+00
-# error all (meters)                3.563701e-03 111.682002 3.183893e+02
-# 
+# only run the following code chunk if running in R studio
+load('data/margaret_ctmm.Rda')
 
 # return a summary of the fitted models
-summary(fits)
+summary(fits) # this should list a model $name, $DOF, and $CI
 
-save(fits, file = "margaret_ctmm.Rda")
 
 # plot variogram and model
-
-"margaret_ctmm.Rda"
-
 plot(vg, CTMM = fits)
-
 
 # THEN, with model and data in had, do the other stuff...
 
 # estimate average speed
 speed(margaret, fits)
+# Error in sqrt(diff(data$x)^2 + diff(data$y)^2)/DT/SPD: non-numeric argument to binary operator
+# speed <- speed(margaret, fits, cores = -1, fast = TRUE)
+# just loads forever and doesn't make progress :')
+
 
 # estimate instantaneous speeds
-speeds <- speeds (margaret, fits)
+speeds <- speeds(margaret, fits)
+# this worked :))
+# its in meters/second
 
 # Estimating daily movement distance over a study period
 # First identify how many days the individual was tracked for
 margaret$day <- cut(margaret$timestamp, breaks = "day")
-days <- unique (margaret$day)
+days <- unique(margaret$day)
 
-#An empty list to fill with the results
+# An empty list to fill with the results
 results <- list()
 
 # Loop over the number of days
@@ -137,6 +135,7 @@ for (i in 1:length(days)) {
   names(x) <- c("date", "dist.ML", "dist.Min", "dist.Max")
   results[[i]] <- x
 }
+# this broke too because it doesn't like the speed() function for some reason
 
 # Finally bind results together as a data frame
 results <- as.data.frame(do.call(rbind, results))
@@ -144,9 +143,9 @@ results$date <- as.Date (days)
 head(results)
 
 
-# all this from Noonan 2021 ####
+# assess whether there's a range shift (Noonan 2021) ####
 # calculating home range
-#calculate the AKDE based on the best fit model
+# calculate the AKDE based on the best fit model
 margaret_akde <- akde(margaret, fits)
 #Return the basic statistics on the HR area
 summary(margaret_akde)
@@ -168,34 +167,34 @@ plot(margaret,
 
 # visually assess whether there's a range shift going on over the course of the study period
 
-# road permeability
+# road permeability (Noonan 2021) *not sure if relevant to us* ####
 # are they willing to establish home ranges on either side of the roads?
 
 # Load the road data
-# Is this just one road? Will we be loading in all roads here?
-roads <- readOGR(dsn = "~/Dropbox (Personal)/UBC/Side_Projects/Arnaud_Anteaters/Scripts/Roads/BR262")
-## OGR data source with driver: ESRI Shapefile
-## Source: "/Users/michaelnoonan/Dropbox (Personal)/UBC/Side_Projects/Arnaud_Anteaters/Scripts/Roads/BR262", layer: "BR262"
-## with 1 features
-## It has 11 fields
-## Integer64 fields read as strings: tessellate extrude visibility drawOrder
+roads <- st_read("data/Roadmap_Wrangled")
 
 # Reproject the roads to match the tracking data
-bobcat_proj <- margaret@info$projection
-roads <- spTransform(roads, bobcat_proj)
+roads <- st_transform(roads, crs("epsg:4326"))
 
-# Reproject the HR contour
-HR_contour <- spTransform(HR_contour, bobcat_proj)
+# create and reproject home range contour
+# Extract the 95% home range contour
+home_range_polygon <- SpatialPolygonsDataFrame.UD(margaret_akde)
+
+# Convert SpatialPolygonsDataFrame to an sf object
+home_range_sf <- st_as_sf(home_range_polygon)
+
+# tranform to proper crs
+home_range <- st_transform(home_range_sf, crs("epsg:4326"))
 
 # Get the areas that fall on either side of the road
-lpi <- gIntersection(HR_contour, roads)
-blpi <- gBuffer(lpi, width = 0.000001)
-dpi <- gDifference(HR_contour, blpi)
+roads_within_range <- st_intersection(home_range, roads)
+blpi <- st_buffer(roads_within_range, dist = 0.000001)
+dpi <- st_difference(home_range, blpi)
 Side_1 <- SpatialPolygons(list(Polygons(list(dpi@polygons[[1]]@Polygons[[1]]), "1")))
 Side_2 <- SpatialPolygons(list(Polygons(list(dpi@polygons[[1]]@Polygons[[2]]), "2")))
 
 # Plot the split HR and the road
-plot(HR_contour)
+plot(home_range)
 plot(Side_1, col = "lightgreen", add = TRUE)
 plot(Side_2, col = "lightblue", add = TRUE)
 lines(roads, col = "red")
@@ -205,40 +204,122 @@ Side_1 <- raster::area(Side_1)
 Side_2 <- raster::area(Side_2)
 # Ratio of roads on each side
 ratio <- min(Side_1, Side_2)/max(Side_1, Side_2)
-round(ratio,3)
+round(ratio, 3)
 
-# distance of home range to nearest road
-# Extract coordinates of home range center and carry out some reprojections
-pj <- proj4::project(fits$mu,
-                     fits@info$projection,
-                     inverse = TRUE)
-mu <- data.frame(lat = pj[,1],
-                 lon = pj[,2])
-mu <- SpatialPointsDataFrame(coords = mu,
-                             data = mu,
-                             proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
-mu_proj <- spTransform(mu, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +no_defs"))
-# Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
-# = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
-# definition
-ROAD_proj <- spTransform(roads, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +no_defs"))
-# Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
-# = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
-# definition
-# Calculate distance to nearest road
-gDistance(mu_proj, ROAD_proj)/1000
+# calculate distance of home range to nearest road (Noonan 2021) *will need to change* ####
 
-# Plot everything to make sure projections are correct
-HR_contour_proj <- spTransform(HR_contour, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +
-no_defs"))
-# Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
-# = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
-# definition
-plot(HR_contour_proj)
-plot(ROAD_proj, add = TRUE, col = "red")
-plot(mu_proj, add = TRUE, pch = 16, col = "#046C9A")
+# # this is their code. I'm gonna need to make my own
+# # Extract coordinates of home range center and carry out some reprojections
+# pj <- proj4::project(fits$mu,
+#                      fits@info$projection,
+#                      inverse = TRUE)
+# mu <- data.frame(lat = pj[,1],
+#                  lon = pj[,2])
+# mu <- SpatialPointsDataFrame(coords = mu,
+#                              data = mu,
+#                              proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+# mu_proj <- spTransform(mu, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +no_defs"))
+# # Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
+# # = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
+# # definition
+# ROAD_proj <- spTransform(roads, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +no_defs"))
+# # Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
+# # = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
+# # definition
+# 
+# # Calculate distance to nearest road
+# gDistance(mu_proj, ROAD_proj)/1000
+# 
+# # Plot everything to make sure projections are correct
+# home_range_proj <- spTransform(home_range, CRS("+proj=utm +zone=21 +south +ellps=WGS72 +units=m +
+# no_defs"))
+# # Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj
+# # = prefer_proj): Discarded datum Unknown based on WGS 72 ellipsoid in Proj4
+# # definition
+# plot(home_range_proj)
+# plot(ROAD_proj, add = TRUE, col = "red")
+# plot(mu_proj, add = TRUE, pch = 16, col = "#046C9A")
+# they don't do any analysis here?? they just have this information?
 
-# estimate road crossings 
+# First I need to get instantaneous speed at each point as a function of the distance from that point to the road
+# so we'll need to get out margaret (as spatial) and roads, get the distances, and then get instantaneous speed from each point too
+
+# get distances:
+# make margaret a spatial object
+margaret_df <- as.data.frame(margaret)
+# simplify dataframe
+margaret_df <- margaret_df[ , 2:3]
+margaret_sf <- st_as_sf(margaret_df,
+                        coords = c("longitude", "latitude"),
+                        crs = st_crs(crs("epsg:4326")))
+
+# make empty dataframe to store results
+results <- data.frame(Distance = rep(NA, length(margaret$timestamp)), stringsAsFactors = FALSE)
+# and add "timestamp" column
+results$Timestamp <- margaret$timestamp
+
+# then get distance to nearest road (for loop to run through all points)
+for(i in 1:length(margaret$timestamp)){
+  
+  # select i
+  point_i <- margaret_sf[i, ]
+  cat("Starting point ",i,"\n") # tells you how far along you are
+  
+  # Find the nearest road
+  nearest_road_idx <- st_nearest_feature(point_i, roads)
+  
+  # Get the nearest road geometry
+  nearest_road <- roads[nearest_road_idx, ]
+  
+  # Calculate the distance
+  distance <- st_distance(point_i, nearest_road)
+  
+  # add distance to empty results dataframe
+  results[i, 1] <- distance
+  
+}
+
+copy_results <- results
+
+# plot to be sure this worked right
+ggplot() +
+  # Plot the points from margaret_sf
+  geom_sf(data = margaret_sf, color = "blue", size = 3) +
+  # Overlay the roads
+  geom_sf(data = roads, color = "red", alpha = 0.5) +
+  # Set the limits to match the extent of margaret_sf
+  coord_sf(crs = st_crs(margaret_sf), xlim = st_bbox(margaret_sf)[c("xmin", "xmax")],
+      ylim = st_bbox(margaret_sf)[c("ymin", "ymax")]) +
+  # Add titles and labels if needed
+  ggtitle("Bobcat's Range with Roads Overlay") +
+  theme_minimal()
+
+# make dataframe with one row per point and a column with instantaneous speed and a column with distance
+results$Speed <- speeds$est
+
+# run analysis
+plot(results$Speed ~ results$Distance)
+# not really a relationship here
+
+# now calculate road density and home range size
+# grab home range size
+summary <- summary(margaret_akde)
+areas <- as.data.frame(summary$CI)
+area_sq_km <- areas$est
+
+# Calculate total road length in meters
+total_road_length <- st_length(roads_within_range)
+total_road_length_m <- sum(total_road_length)
+total_road_length_km <- as.numeric(total_road_length_m/1000)
+
+# Compute road density (meters of road per square meter of home range)
+road_density <- total_road_length_km / area_sq_km
+
+# pull daily movement speed (from calculations above)
+
+# analyze daily movement speed as a function of road density
+
+# estimate road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
 mlp <- predict(margaret, fits, dt = 60, complete = TRUE)
 # Warning in if (axes == "z") {: the condition has length > 1 and only the first
@@ -288,7 +369,7 @@ head(cross_times)
 
 # here they did stream crossings; we'll instead do modeling and see whether they crossed roads more or less frequently than expected at random
 
-# crossing structures 
+# did they use crossing structures (Noonan 2021) ####
 # Load in the locations of the crossing passages
 passes <- readOGR(dsn = "~/Dropbox (Personal)/UBC/Side_Projects/Arnaud_Anteaters/Scripts/Roads/P
 assages")
