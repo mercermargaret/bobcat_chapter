@@ -1,0 +1,58 @@
+Fri Aug  2 17:03:32 MST 2024
+Initiating script
+ tag.individual.identifier individual.local.identifier  location.lat  
+ Min.   :719990            Length:2891                 Min.   :32.20  
+ 1st Qu.:719990            Class :character            1st Qu.:32.21  
+ Median :725536            Mode  :character            Median :32.21  
+ Mean   :723829                                        Mean   :32.21  
+ 3rd Qu.:725536                                        3rd Qu.:32.22  
+ Max.   :725536                                        Max.   :32.24  
+ location.long   timestamp          data_owner       
+ Min.   :-111   Length:2891        Length:2891       
+ 1st Qu.:-111   Class :character   Class :character  
+ Median :-111   Mode  :character   Mode  :character  
+ Mean   :-111                                        
+ 3rd Qu.:-111                                        
+ Max.   :-111                                        
+Minimum sampling interval of 57.9 minutes in BC #12 Margaret
+$identity
+[1] "BC #12 Margaret"
+
+$timezone
+[1] "UTC"
+
+$projection
+[1] "+proj=tpeqd +lat_1=32.2153221472984 +lon_1=-111.005239623693 +lat_2=32.2120031373305 +lon_2=-110.992983975235 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
+
+$`sampling interval (hours)`
+[1] 6.000278
+
+$`sampling period (years)`
+[1] 2.47142
+
+$`longitude range`
+[1] -111.0303 -110.9810
+
+$`latitude range`
+[1] 32.19998 32.24131
+
+DOP values missing. Assuming DOP=1.
+DOP values missing. Assuming DOP=1.
+$name
+[1] "OUF anisotropic error"
+
+$DOF
+       mean        area   diffusion       speed 
+841.0483495 478.8594468  66.9396815   0.2145813 
+
+$CI
+                                           low        est         high
+area (square kilometers)          8.614783e+00   9.441605 1.030577e+01
+τ[position] (hours)               1.045637e+01  11.556108 1.277151e+01
+τ[velocity] (minutes)             1.176433e-06  12.133369 1.251398e+08
+speed (kilometers/day)            8.089032e-03  24.957827 6.759088e+01
+diffusion (square kilometers/day) 1.580028e+00   2.039031 2.555674e+00
+error all (meters)                3.563701e-03 111.682002 3.183893e+02
+
+Script complete
+Sat Aug  3 03:25:31 MST 2024
