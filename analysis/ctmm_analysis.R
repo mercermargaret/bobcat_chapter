@@ -16,7 +16,7 @@
 
 # load packages
 library(ctmm)
-library(proj4)
+# library(proj4) not working on hpc right now so ill skip
 library(foreach)
 library(doParallel)
 library(sf)
