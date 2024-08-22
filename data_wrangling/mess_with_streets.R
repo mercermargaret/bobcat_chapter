@@ -14,7 +14,7 @@ rm(list=ls())
 
 # import data
 # first roadmap
-streets <- st_read("data/Raw_Roads_AZ/Street_Roads/TIGER_Streets")
+streets <- st_read("../data_too_big/Raw_Roads_AZ/Street_Roads/TIGER_Streets")
 # then bobcats
 bobcats <- read.csv("data/bobcat_locs_all.csv")
 
@@ -50,11 +50,11 @@ bobcats_sf <- st_as_sf(bobcats_all_mcp)
 # Transform to a projected CRS (e.g., UTM zone 10N) to use meters
 bobcats_sf <- st_transform(bobcats_sf, crs = 32612) # UTM zone 10N
 
-# Add a 100-meter buffer
-buffered_sf <- st_buffer(bobcats_sf, dist = 1000)
+# Add a 1000-meter buffer
+buffered_sf <- st_buffer(bobcats_sf, dist = 10000)
 
 # Plot the original polygon and the buffered polygon
-plot(st_geometry(bobcats_sf), col = "lightblue", main = "Polygon with 100m Buffer")
+plot(st_geometry(bobcats_sf), col = "lightblue", main = "Polygon with 1000m Buffer")
 plot(st_geometry(buffered_sf), add = TRUE, border = "red")
 
 # figure out which roads are within polygon

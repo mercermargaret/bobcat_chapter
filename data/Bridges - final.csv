@@ -1,4 +1,4 @@
-road,name,coordinates,saved?,what goes under,start coords,end coords,original to dataset?
+road,name,coordinates,saved_in_google_maps,what_goes_under,start_coords,end_coords,original to dataset?
 I 010,Cortaro Rd TI OP EB,"32.3589000000001, -111.0901",yes,road,"32.358708016980984, -111.08970920798969","32.3589436307653, -111.08994523459867",yes
 I 010,Sunset Rd TI OP EB,"32.3092, -111.0421",yes,road,can't tell,can't tell,yes
 10E I10 FRONTAGE        RD  S,Rillito Creek EB FR Bridge,"32.3155, -111.0469",yes,riverbed,"32.31495449372816, -111.04589227738683","32.31573558026473, -111.04640820197014",yes
