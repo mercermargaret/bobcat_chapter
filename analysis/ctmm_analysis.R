@@ -39,8 +39,11 @@ summary(margaret_gps)
 
 # making margaret a telemetry object so ctmm recognizes it
 margaret <- as.telemetry(margaret_gps)
+
+uere(margaret) <- 7 # make sure this worked
+
 # subset for preliminary analysis
-margaret <- margaret[1:100,]
+margaret <- margaret[1:1000,]
 summary(margaret)
 
 # plotting!
@@ -53,7 +56,7 @@ outliers <- outlie(margaret)
 # plot(outliers)
 
 # get rid of outliers in margaret
-outlier_t <- outliers$t[outliers$speed >= .40]
+outlier_t <- outliers$t[outliers$speed >= .40] # this requires visual assessment!! how do this when running all of them at once?
 margaret <- margaret[!margaret$t %in% outlier_t, ]
 
 # replot data
@@ -68,99 +71,105 @@ vg <- variogram(margaret)
 
 # Guesstimate the model to obtain initial parameter values
 guess <- ctmm.guess(margaret,
-                    CTMM = ctmm(error = 10),
                         variogram = vg,
                         interactive = FALSE)
 guess$error <- TRUE
-#
 
 # only run the following code chunk if running on the hpc
-# fits <- ctmm.select(margaret, CTMM = guess) # let this run for a while! it takes like 24 hours!
+fit <- ctmm.select(margaret, CTMM = guess, trace = 2) # let this run for a while! it takes like 24 hours!
 # run this on the hpc!!
 # this ran and spit output into margaret_ctmm.Rda
-# save(fits, file = "margaret_ctmm.Rda")
+# save(fit, file = "margaret_ctmm.Rda")
 
-# # only run the following code chunk if running in R studio
-load('data/margaret_ctmm.Rda')
+# # # only run the following code chunk if running in R studio
+# load('data/margaret_ctmm.Rda')
 
 # return a summary of the fitted models
-summary(fits) # this should list a model $name, $DOF, and $CI
+summary(fit) # this should list a model $name, $DOF, and $CI
 
 
 # plot variogram and model
-plot(vg, CTMM = fits)
+plot(vg, CTMM = fit)
 
 # THEN, with model and data in had, do the other stuff...
 
 # estimate average speed
-# speed(margaret, fits, fast=TRUE)
+speed <- speed(margaret, fit, fast=TRUE)
 # Error in sqrt(diff(data$x)^2 + diff(data$y)^2)/DT/SPD: non-numeric argument to binary operator
 # Error also shows up when I run it on the hpc
-# speed <- speed(margaret, fits, cores = -1, fast = TRUE)
+# speed <- speed(margaret, fit, cores = -1, fast = TRUE)
 # just loads forever and doesn't make progress :')
+# doesn't error when I subset data to 100
+
 
 
 # estimate instantaneous speeds
-speeds <- speeds(margaret, fits)
-# this worked :))
+speeds <- speeds(margaret, fit)
 # its in meters/second
 
 # Estimating daily movement distance over a study period
 # First identify how many days the individual was tracked for
 margaret$day <- cut(margaret$timestamp, breaks = "day")
 days <- unique(margaret$day)
-# 
-# # An empty list to fill with the results
-# results <- list()
-# 
-# # Loop over the number of days
-# for (i in 1:length(days)) {
-#   message ("Estimating distance travelled on day", i,": ", days[i])
-#   # Select data for the day in question
-#   data_subset <- margaret[which(margaret$day == days[i]), ]
-#   # Calculate the duration of the sampling period (in seconds )
-#   samp_time <- diff (c(data_subset$t[1],
-#                          data_subset$t[nrow(data_subset)]))
-#   
-#   # Guesstimate the model for initial parameter values
-#   guess <- ctmm.guess(margaret,
-#                           variogram = variogram (margaret) ,
-#                           interactive = FALSE )
-#   # Turn error on
-#   guess$error <- TRUE
-#   # Fit the movement model to the day’s data
-#   fits <- ctmm.fit(data_subset,
-#                      CTMM = guess)
-#   # Calculate speed in m/s
-#   ctmm_speed <- speed(object = data_subset,
-#                          CTMM = fits,
-#                          units = FALSE)
-#   # Multiply speed (in m/s) by the sample time (in s)
-#   # to get the estimated distance travelled (in m)
-#   ctmm_dist <- ctmm_speed * samp_time
-#   # Re-name the variable
-#   rownames(ctmm_dist) <- "distance(meters)"
-#   
-#   # And store the results in the list
-#   x <- c(i, #The day
-#          ctmm_dist[2], #The ML distance estimate
-#          ctmm_dist[1], #Min CI
-#          ctmm_dist[3]) #Max CI
-#   names(x) <- c("date", "dist.ML", "dist.Min", "dist.Max")
-#   results[[i]] <- x
-# }
-# # this broke too because it doesn't like the speed() function for some reason
-# 
-# # Finally bind results together as a data frame
-# results <- as.data.frame(do.call(rbind, results))
-# results$date <- as.Date(days)
-# head(results)
+
+# An empty list to fill with the results
+results <- list()
+
+# Loop over the number of days
+for (i in 1:length(days)) {
+  message ("Estimating distance travelled on day", i,": ", days[i])
+  # Select data for the day in question
+  data_subset <- margaret[which(margaret$day == days[i]), ]
+  # Calculate the duration of the sampling period (in seconds )
+  samp_time <- diff (c(data_subset$t[1],
+                         data_subset$t[nrow(data_subset)]))
+
+  # Guesstimate the model for initial parameter values
+  guess <- ctmm.guess(margaret,
+                          variogram = variogram(margaret) ,
+                          interactive = FALSE)
+  # Turn error on
+  guess$error <- TRUE
+  # Fit the movement model to the day’s data
+  fits <- ctmm.fit(data_subset,
+                     CTMM = guess)
+  # Calculate speed in m/s
+  ctmm_speed <- speed(object = data_subset,
+                         CTMM = fits,
+                         units = FALSE)
+  # Multiply speed (in m/s) by the sample time (in s)
+  # to get the estimated distance travelled (in m)
+  ctmm_dist <- ctmm_speed * samp_time
+  # Re-name the variable
+  rownames(ctmm_dist) <- "distance(meters)"
+
+  # And store the results in the list
+  x <- c(i, #The day
+         ctmm_dist[2], #The ML distance estimate
+         ctmm_dist[1], #Min CI
+         ctmm_dist[3]) #Max CI
+  names(x) <- c("date", "dist.ML", "dist.Min", "dist.Max")
+  results[[i]] <- x
+}
+
+# even when speed works (on 100 or 1000 rows), this doesn't:
+# Error in ctmm_speed * samp_time : non-numeric argument to binary operator
+# In addition: Warning messages:
+#   1: In cov.loglike(DIFF$hessian, grad) :
+#   MLE is near a boundary or optimizer failed.
+# 2: In speed.ctmm(CTMM, data = object, t = t, level = level, robust = robust,  :
+#                    Movement model is fractal.
+
+# Finally bind results together as a data frame
+results <- as.data.frame(do.call(rbind, results))
+results$date <- as.Date(days)
+head(results)
 
 
 # assess whether there's a range shift (Noonan 2021) ####
 # calculating home range
 # calculate the AKDE based on the best fit model
-margaret_akde <- akde(margaret, fits)
+margaret_akde <- akde(margaret, fit)
 #Return the basic statistics on the HR area
 summary(margaret_akde)
 
@@ -303,7 +312,7 @@ road_density <- total_road_length_km / area_sq_km
 
 # estimate road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
-path <- predict(margaret, fits, dt = 60, complete = TRUE) # this takes like 10-15 minutes to run!
+path <- predict(margaret, fit, dt = 60, complete = TRUE) # this takes like 10-15 minutes to run!
 
 # Convert to the right format for counting road crossings
 path <- SpatialPointsDataFrame.telemetry(path)
@@ -371,7 +380,7 @@ tic()
 x <- foreach(j = 1:nReps) %dopar% {
   
   # Simulate data from the fitted movement model
-  sims <- simulate(fits, t = margaret$t, complete = TRUE)
+  sims <- simulate(fit, t = margaret$t, complete = TRUE)
   
   # Convert to the right format for counting road crossings
   path_sim <- SpatialPointsDataFrame.telemetry(sims)
@@ -406,7 +415,7 @@ x <- foreach(j = 1:nReps) %dopar% {
 
   
   # list of results to return
-  list(fits@info$identity,
+  list(fit@info$identity,
        # sim_road_cross_times,
        Sim_Road_Cross_Count)
 
