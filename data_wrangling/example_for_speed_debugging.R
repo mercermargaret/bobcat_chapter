@@ -15,7 +15,7 @@ bobcat <- read.csv("bobcat_example.csv")
 # making it a telemetry object so ctmm recognizes it
 bobcat <- as.telemetry(bobcat)
 
-uere(bobcat) <- 7 # make sure this worked
+uere(bobcat) <- 7
 
 # load model fits I ran earlier (it took ~24 hours)
 load('data/margaret_ctmm.Rda')
