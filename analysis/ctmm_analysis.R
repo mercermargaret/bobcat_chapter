@@ -6,6 +6,8 @@
     # see: https://static-content.springer.com/esm/art%3A10.1186%2Fs40462-019-0177-1/MediaObjects/40462_2019_177_MOESM2_ESM.pdf
     # and: https://zslpublications.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Facv.12728&file=acv12728-sup-0002-AppendixS2.pdf
 
+# introductory stuff ####
+
 # load packages
 library(ctmm)
 library(proj4)
@@ -64,21 +66,24 @@ plot(vg, CTMM = fits)
 
 # THEN, with model and data in had, do the other stuff...
 
-# estimate average speed
+
+# estimate average speed ####
 speed <- speed(individual, fits, fast=TRUE, robust=TRUE) # might take a while
 # still breaking. wtf.
 
-# estimate instantaneous speeds
+
+# estimate instantaneous speeds ####
 speeds <- speeds(individual, fits)
 # its in meters/second
 
-# Estimating daily movement distance over a study period
+
+# Estimating daily movement distance over a study period ####
 # First identify how many days the individual was tracked for
 individual$day <- cut(individual$timestamp, breaks = "day")
 days <- unique(individual$day)
 
 # An empty list to fill with the results
-results <- list()
+results_daily_distance <- list()
 
 # Loop over the number of days
 for (i in 1:length(days)) {
@@ -127,9 +132,10 @@ for (i in 1:length(days)) {
 #                    Movement model is fractal.
 
 # Finally bind results together as a data frame
-results <- as.data.frame(do.call(rbind, results))
-results$date <- as.Date(days)
-head(results)
+results_daily_distance <- as.data.frame(do.call(rbind, results_daily_distance))
+results_daily_distance$date <- as.Date(days)
+head(results_daily_distance)
+
 
 
 # import roads and create home range ####
@@ -156,7 +162,8 @@ home_range <- st_transform(home_range_sf, crs("epsg:4326"))
 # Get the areas that fall on either side of the road
 roads_within_range <- st_intersection(home_range, roads)
 
-# calculate distance of home range to nearest road (Noonan 2021) *will need to change* ####
+
+# calculate distance of each point to nearest road (Noonan 2021) ####
 # First I need to get instantaneous speed at each point as a function of the distance from that point to the road
 # so we'll need to get out individual (as spatial) and roads, get the distances, and then get instantaneous speed from each point too
 
@@ -170,9 +177,9 @@ individual_sf <- st_as_sf(individual_df,
                         crs = st_crs(crs("epsg:4326")))
 
 # make empty dataframe to store results
-results <- data.frame(Distance = rep(NA, length(individual$timestamp)), stringsAsFactors = FALSE)
+results_road_dist <- data.frame(Distance = rep(NA, length(individual$timestamp)), stringsAsFactors = FALSE)
 # and add "timestamp" column
-results$Timestamp <- individual$timestamp
+results_road_dist$Timestamp <- individual$timestamp
 
 # then get distance to nearest road (for loop to run through all points)
 for(i in 1:length(individual$timestamp)){
@@ -191,11 +198,11 @@ for(i in 1:length(individual$timestamp)){
   distance <- st_distance(point_i, nearest_road)
   
   # add distance to empty results dataframe
-  results[i, 1] <- distance
+  results_road_dist[i, 1] <- distance
   
 }
 
-copy_results <- results
+results_dist_and_speed <- results_road_dist
 
 # plot to be sure this worked right
 ggplot() +
@@ -211,13 +218,13 @@ ggplot() +
   theme_minimal()
 
 # make dataframe with one row per point and a column with instantaneous speed and a column with distance
-results$Speed <- speeds$est
+results_dist_and_speed$Speed <- speeds$est
 
 # run analysis
-plot(results$Speed ~ results$Distance)
+plot(results_dist_and_speed$Speed ~ results_dist_and_speed$Distance)
 # not really a relationship here
 
-# now calculate road density and home range size
+# now calculate road density and home range size ####
 # grab home range size
 summary <- summary(individual_akde)
 areas <- as.data.frame(summary$CI)
@@ -236,6 +243,7 @@ road_density <- total_road_length_km / area_sq_km
 
 # analyze daily movement speed as a function of road density
 # !!! this has to happen after ALL bobcats are analyzed!
+
 
 # estimate road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
@@ -327,7 +335,7 @@ x <- foreach(j = 1:nReps) %dopar% {
   sim_road_crossings_sp <- as(sim_crossings_new, "Spatial")
   # road_crossings_latlong <- spTransform(sim_road_crossings, LatLon)
   path_sim_latlong <- spTransform(path_sim, LatLon)
-  #Find times it crossed the road
+  # Find times it crossed the road
   sim_road_cross_times <- vector()
   for(i in 1:nrow(sim_road_crossings_sp@coords)){
     # Find which point in the path is closest to the crossing location
@@ -363,6 +371,7 @@ mean(sim_results$Road_Crossings)
 
 # t test? make a list of simulated road crossings and then actual road crossings for all
 # individuals and then t test the means?
+
 
 # did they use crossing structures (Noonan 2021) ####
 bridges <- st_read("data/Bridges_As_Lines")
@@ -402,3 +411,70 @@ plot(individual, col = "NA")
 lines(roads, col = "darkgray")
 plot(individual, col = "#046C9A")
 lines(bridges, pch = 16, lwd = 3, col = "red")
+
+
+
+# outputs ####
+fits
+# model
+        # one model per bobcat (best fit movement model)
+speed 
+# value
+        # one value per bobcat (average speed of bobcat)
+# speeds # unnecessary since we merge this into "results_dist_and_speed"
+# # dataframe
+#         # one row per datapoint with:
+#             # instantaneous speed at that point
+results_daily_distance # (check this once i get speed working)
+# dataframe
+        # One row per date with:
+           # average daily movement distance
+           # lower CI
+           # upper CI
+home_range
+# sf object (polygon)
+        # one object per bobcat with:
+            # 95% home range estimate
+# results_road_dist # unnecessary since we merge this into "results_dist_and_speed"
+# # dataframe
+#         # one row per datapoint with:
+#             # distance from each point to the nearest road
+#             # timestamp of each point
+results_dist_and_speed 
+# dataframe
+        # combined results_road_dist and speeds
+        # one row per datapoint with:
+            # distance from each point to nearest road
+            # instantaneous speed at that point
+            # timestamp of each point
+area_sq_km 
+# value
+        # one value per bobcat (area of home range in km)
+total_road_length_km 
+# value
+        # one value per bobcat (total length of all road in range in km)
+road_density 
+# value
+        # calculate from area and road 
+        # one value per bobcat (road density of home range)
+crossings_new 
+# spatial object
+        # one point per crossing event (locations of all road crossings)
+Num_Crossings 
+# value
+        # one value per bobcat (number of times bobcat's path crossed road)
+cross_times 
+# vector
+        # one list item per crossing event
+sim_results
+# dataframe
+        # one row per simulation with:
+          # number of road crossings in that simulation
+          # timestamp? (check this!!)
+pass_dists 
+# vector
+        # one list item per crossing event (distance from crossing event to nearest crossing structure)
+
+# !!!! We still need:
+# traffic volume?
+
