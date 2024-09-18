@@ -25,9 +25,6 @@ rm(list=ls())
 # loading in gps data as csv
 individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/margaret.csv")
 
-# # if want to subset for test run
-# individual_gps <- individual_gps[1:50]
-
 # making bobcat a telemetry object so ctmm recognizes it
 individual <- as.telemetry(individual_gps)
 
@@ -47,25 +44,16 @@ guess <- ctmm.guess(individual,
                         interactive = FALSE)
 guess$error <- TRUE
 
-# only run the following code chunk if running on the hpc
-fits <- ctmm.select(individual, CTMM = guess, trace = 2) # let this run for a while! it takes like 24 hours!
-# run this on the hpc!!
-# this ran and spit output into individual_ctmm.Rda
-# save(fits, file = "margaret_ctmm.Rda")
-# DOF$area: minimum of 5! Less than 30 you have to do extra stuff.
-
-# # only run the following code chunk if running in R studio
+# load model
 load('data/margaret_ctmm.Rda')
 
 # return a summary of the fitted models
 summary(fits) # this should list a model $name, $DOF, and $CI
 
-
 # plot variogram and model
 plot(vg, CTMM = fits)
 
-# THEN, with model and data in had, do the other stuff...
-
+# THEN, with model and data in hand, do the other stuff...
 
 # estimate average speed ####
 speed <- speed(individual, fits, fast=TRUE, robust=TRUE) # might take a while
