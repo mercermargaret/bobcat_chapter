@@ -19,8 +19,11 @@ t(paste0("Data loaded at ", Sys.time()))
 # making bobcat a telemetry object so ctmm recognizes it
 individual <- as.telemetry(individual_gps)
 
+# right here we want to make the name so it doesn't have spaces
+name <- gsub(" ", "_", individual_gps$individual.identifier)
+
 # add individual id to telemetry object
-individual$identity <- individual_gps$individual.identifier
+individual$identity <- name
 
 slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
 
