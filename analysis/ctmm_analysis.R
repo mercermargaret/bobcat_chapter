@@ -45,13 +45,16 @@ guess <- ctmm.guess(individual,
 guess$error <- TRUE
 
 # load model
-load('data/margaret_ctmm.Rda')
+load('data/Model_Fit_Results/BC_#8_Ben.Rda')
 
 # return a summary of the fitted models
 summary(fits) # this should list a model $name, $DOF, and $CI
 
 # plot variogram and model
 plot(vg, CTMM = fits)
+
+# make variogram
+vg <- variogram(individual)
 
 # THEN, with model and data in hand, do the other stuff...
 

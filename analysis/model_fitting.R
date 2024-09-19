@@ -7,8 +7,6 @@ library(ctmm)
 library(tidyverse)
 library(data.table)
 
-# setwd("data/Bobcat_Individuals/range_resident")
-
 ind_file <- commandArgs(trailingOnly = TRUE)
 print(ind_file)
 
@@ -61,12 +59,7 @@ assign(paste0("hr_", id), fits)
 hr_name <- paste0("hr_", id)
 
 save(fits, individual, hr, list = c(ctmm_name, t_name, hr_name),
-     file = paste0("data/Model_Fit_Results/", id, ".Rda")) # this part is NOT working
-# I've tried: 
-        # "home/u15/mmercer3/proj/bobcat_chapter/data/Model_Fit_Results/"
-        # "../../../Model_Fit_Results/"
-        # "../Model_Fit_Results/"
-        # "data/Model_Fit_Results/"
+     file = paste0("data/Model_Fit_Results/", id, ".Rda"))
 
 print(paste0("Done at ",Sys.time()))
 
