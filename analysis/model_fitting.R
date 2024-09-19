@@ -25,7 +25,7 @@ name <- gsub(" ", "_", individual_gps$individual.identifier)
 # add individual id to telemetry object
 individual$identity <- name
 
-slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
+slot(individual, "info")$identity <- name
 
 uere(individual) <- 7
 
