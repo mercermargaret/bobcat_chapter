@@ -61,7 +61,7 @@ assign(paste0("hr_", id), fits)
 hr_name <- paste0("hr_", id)
 
 save(fits, individual, hr, list = c(ctmm_name, t_name, hr_name),
-     file = paste0("data/Model_Fit_Results/", id, ".Rda"))
+     file = paste0("../../../Model_Fit_Results/", id, ".Rda"))
 
 print(paste0("Done at ",Sys.time()))
 
