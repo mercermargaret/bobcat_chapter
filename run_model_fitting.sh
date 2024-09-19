@@ -9,7 +9,7 @@
 #SBATCH --mem-per-cpu=32G         # memory required for process
 #SBATCH --array=0-2%3    	   # set number of total simulations and number that can run simultaneously (will be 0-33%34 for real run through)
 
-ml R gdal
+ml R gdal/3.8.5
 
 cd /home/u15/mmercer3/proj/bobcat_chapter   # where executable and data is located
 

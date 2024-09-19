@@ -1,0 +1,62 @@
+Thu Sep 19 10:04:20 MST 2024
+Initiating script
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ ggplot2::annotate() masks ctmm::annotate()
+✖ dplyr::filter()     masks stats::filter()
+✖ dplyr::lag()        masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:lubridate’:
+
+    hour, isoweek, mday, minute, month, quarter, second, wday, week,
+    yday, year
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/ben.csv"
+     [,1]                                
+[1,] "Data loaded at 2024-09-19 10:04:31"
+Minimum sampling interval of 58.9 minutes in unknown
+Warning message:
+In as.telemetry.data.frame(individual_gps) :
+  No MoveBank or GBIF identification found. Assuming data corresponds to one indiviudal.
+DOP values missing. Assuming DOP=1.
+[1] "BC #8 Ben"
+[1] "Telemetry object created at 2024-09-19 10:04:33.72014"
+[1] "CTMM fit at 2024-09-19 10:14:46.926364"
+$name
+[1] "OU anisotropic error"
+
+$DOF
+     mean      area diffusion     speed 
+ 230.5662  384.4083  572.5560    0.0000 
+
+$CI
+                                         low       est      high
+area (square kilometers)          17.2144656 19.073769 21.027047
+τ[position] (days)                 0.9994467  1.142300  1.305571
+diffusion (square kilometers/day)  1.6392971  1.782317  1.931233
+
+[1] "home range created"
+Error in gzfile(file, "wb") : cannot open the connection
+Calls: save -> gzfile
+In addition: Warning message:
+In gzfile(file, "wb") :
+  cannot open compressed file 'data/Model_Fit_Results/BC #8 Ben.Rda', probable reason 'No such file or directory'
+Execution halted
+Script complete
+Thu Sep 19 10:15:03 MST 2024
