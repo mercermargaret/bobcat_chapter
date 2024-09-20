@@ -31,6 +31,7 @@ individual_akde <- akde(individual, fits)
 summary(individual_akde)
 
 roads <- st_read("data/Roadmap_Wrangled")
+t(paste0("Roads loaded at ", Sys.time()))
 
 # Reproject the roads to match the tracking data
 roads <- st_transform(roads, crs("epsg:4326"))
@@ -47,11 +48,12 @@ home_range <- st_transform(home_range_sf, crs("epsg:4326"))
 
 # Get the roads that fall within home range
 roads_within_range <- st_intersection(home_range, roads)
-
+t(paste0("Roads within range calculated at ", Sys.time()))
 
 # estimate number of road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
 path <- predict(individual, fits, dt = 60, complete = TRUE) # this takes like 10-15 minutes to run!
+t(paste0("Predicted path generated at ", Sys.time()))
 
 # Convert to the right format for counting road crossings
 path <- SpatialPointsDataFrame.telemetry(path)
@@ -64,7 +66,8 @@ path_2 <- SpatialLines(path_2, proj4string = CRS(crs_roads))
 # How many times does it cross the road
 path_sf <- st_as_sf(path_2)
 
-road_crossings <- st_intersection(path_sf, roads) # this takes looong time
+road_crossings <- st_intersection(path_sf, roads)
+t(paste0("Road crossings generated at ", Sys.time()))
 
 # turn everything into multipoints so we can convert to points
 crossings_multi <- st_cast((road_crossings), to = "MULTIPOINT")
@@ -163,6 +166,8 @@ x <- foreach(j = 1:nReps) %dopar% {
   
 }
 
+t(paste0("Simulations finished at ", Sys.time()))
+
 
 # 10 sims takes 96 seconds
 # 100 sims takes 24 minutes
@@ -173,6 +178,7 @@ sim_results <- data.frame("ID" = unlist(lapply(x, function (x) x[1])),
                           "Road_Crossings" = unlist(lapply(x, function (x) x[2])))
 mean_sim_cross <- mean(sim_results$Road_Crossings)
 name <- sim_results[1,1]
+name
 
 # so I want to pull out the mean of the simulated results and compare it to the actual number (real_crossings)
 # I want a dataframe with three columns: one for bobcat name, one for number of crossings, one for stimulated crossings
