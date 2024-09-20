@@ -2,6 +2,17 @@
 # margaret mercer
 # sept 20, 2024
 
+# load packages
+library(ctmm)
+library(proj4)
+library(foreach)
+library(doParallel)
+library(sf)
+library(raster)
+library(adehabitatHR)
+library(tidyverse)
+library(geosphere)
+
 # load data
 ind_file <- commandArgs(trailingOnly = TRUE)
 print(ind_file)
