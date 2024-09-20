@@ -1,4 +1,4 @@
-Thu Sep 19 14:25:30 MST 2024
+Thu Sep 19 15:26:35 MST 2024
 Initiating script
 ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -27,34 +27,32 @@ The following object is masked from ‘package:purrr’:
 
     transpose
 
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/avery.csv"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/jack.csv"
      [,1]                                
-[1,] "Data loaded at 2024-09-19 14:25:39"
-Minimum sampling interval of 59.4 minutes in unknown
+[1,] "Data loaded at 2024-09-19 15:26:45"
+Minimum sampling interval of 57.9 minutes in unknown
 Warning message:
 In as.telemetry.data.frame(individual_gps) :
   No MoveBank or GBIF identification found. Assuming data corresponds to one indiviudal.
 DOP values missing. Assuming DOP=1.
-[1] "BC_#28_Avery"
-[1] "Telemetry object created at 2024-09-19 14:25:41.077744"
-[1] "CTMM fit at 2024-09-19 14:51:20.275487"
+[1] "BC_#16_Jack"
+[1] "Telemetry object created at 2024-09-19 15:26:47.973824"
+[1] "CTMM fit at 2024-09-19 15:47:28.47608"
 $name
-[1] "OUF anisotropic error"
+[1] "OUf anisotropic error"
 
 $DOF
      mean      area diffusion     speed 
- 886.8094 1292.2517 1243.9154  335.7977 
+ 624.1528  809.4891  419.4672  161.8973 
 
 $CI
-                                        low       est      high
-area (square kilometers)           7.650271  8.085136  8.531852
-τ[position] (hours)                4.561711  5.090015  5.679504
-τ[velocity] (minutes)             36.154376 43.175047 51.559034
-speed (kilometers/day)            11.908490 12.581405 13.253834
-diffusion (square kilometers/day)  3.248140  3.436480  3.630054
+                                       low       est      high
+area (square kilometers)          9.697546 10.401860 11.130514
+τ (hours)                         4.682868  5.063419  5.474896
+speed (kilometers/day)            5.481784  5.939220  6.396191
+diffusion (square kilometers/day) 2.478179  2.733546  3.001255
 
-Default grid size of 40.0444444444444 minutes chosen for bandwidth(...,fast=TRUE).
 [1] "home range created"
-[1] "Done at 2024-09-19 14:51:27.674615"
+[1] "Done at 2024-09-19 15:47:53.105416"
 Script complete
-Thu Sep 19 14:51:27 MST 2024
+Thu Sep 19 15:47:53 MST 2024

@@ -1,4 +1,4 @@
-Thu Sep 19 14:25:30 MST 2024
+Thu Sep 19 15:26:35 MST 2024
 Initiating script
 ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -27,31 +27,34 @@ The following object is masked from ‘package:purrr’:
 
     transpose
 
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/ben.csv"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/daphne.csv"
      [,1]                                
-[1,] "Data loaded at 2024-09-19 14:25:39"
-Minimum sampling interval of 58.9 minutes in unknown
+[1,] "Data loaded at 2024-09-19 15:26:44"
+Minimum sampling interval of 1.03 hours in unknown
 Warning message:
 In as.telemetry.data.frame(individual_gps) :
   No MoveBank or GBIF identification found. Assuming data corresponds to one indiviudal.
 DOP values missing. Assuming DOP=1.
-[1] "BC_#8_Ben"
-[1] "Telemetry object created at 2024-09-19 14:25:41.05053"
-[1] "CTMM fit at 2024-09-19 14:35:28.010842"
+[1] "BC_#50_Daphne"
+[1] "Telemetry object created at 2024-09-19 15:26:47.06117"
+[1] "CTMM fit at 2024-09-19 15:46:30.564064"
 $name
-[1] "OU anisotropic error"
+[1] "OUF anisotropic error"
 
 $DOF
      mean      area diffusion     speed 
- 230.5663  384.4090  572.5565    0.0000 
+ 590.7547  913.9584  972.9616   17.1356 
 
 $CI
-                                         low       est      high
-area (square kilometers)          17.2144635 19.073765 21.027041
-τ[position] (days)                 0.9994468  1.142300  1.305570
-diffusion (square kilometers/day)  1.6392967  1.782317  1.931232
+                                        low       est      high
+area (square kilometers)           5.423917  5.793476  6.175042
+τ[position] (hours)                5.770589  6.471208  7.256890
+τ[velocity] (minutes)              8.948084 16.738857 31.312773
+speed (kilometers/day)            12.031364 15.744353 19.449970
+diffusion (square kilometers/day)  2.312229  2.464684  2.621937
 
+Default grid size of 1.00180555555556 hours chosen for bandwidth(...,fast=TRUE).
 [1] "home range created"
-[1] "Done at 2024-09-19 14:35:44.6183"
+[1] "Done at 2024-09-19 15:46:35.686962"
 Script complete
-Thu Sep 19 14:35:44 MST 2024
+Thu Sep 19 15:46:35 MST 2024
