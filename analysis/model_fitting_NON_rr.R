@@ -7,6 +7,9 @@ library(ctmm)
 library(tidyverse)
 library(data.table)
 
+ind_file <- commandArgs(trailingOnly = TRUE)
+print(ind_file)
+
 individual_gps <- fread(ind_file)
 
 t(paste0("Data loaded at ", Sys.time()))

@@ -1,0 +1,60 @@
+Fri Sep 20 10:04:07 MST 2024
+Initiating script
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ ggplot2::annotate() masks ctmm::annotate()
+✖ dplyr::filter()     masks stats::filter()
+✖ dplyr::lag()        masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:lubridate’:
+
+    hour, isoweek, mday, minute, month, quarter, second, wday, week,
+    yday, year
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/data/Bobcat_Individuals/range_resident/braeden.csv"
+     [,1]                                
+[1,] "Data loaded at 2024-09-20 10:04:16"
+Minimum sampling interval of 58.9 minutes in unknown
+Warning message:
+In as.telemetry.data.frame(individual_gps) :
+  No MoveBank or GBIF identification found. Assuming data corresponds to one indiviudal.
+DOP values missing. Assuming DOP=1.
+[1] "Braeden"
+[1] "Telemetry object created at 2024-09-20 10:04:19.534472"
+[1] "CTMM fit at 2024-09-20 10:19:14.485388"
+$name
+[1] "OUF anisotropic error"
+
+$DOF
+     mean      area diffusion     speed 
+ 213.7600  333.3541  504.5479  221.2429 
+
+$CI
+                                        low       est      high
+area (square kilometers)          37.052294 41.375145 45.933061
+τ[position] (hours)               15.497564 17.922326 20.726467
+τ[velocity] (minutes)             44.356614 53.102455 63.572723
+speed (kilometers/day)            13.104508 14.028859 14.952398
+diffusion (square kilometers/day)  5.671379  6.200697  6.753291
+
+Default grid size of 47.9933333333333 minutes chosen for bandwidth(...,fast=TRUE).
+[1] "home range created"
+[1] "Done at 2024-09-20 10:19:34.844683"
+Script complete
+Fri Sep 20 10:19:34 MST 2024
