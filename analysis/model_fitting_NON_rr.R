@@ -1,14 +1,11 @@
-# just the model fitting portion of ctmm analysis
+# just the model fitting portion of ctmm analysis (for NON range resident individuals)
 # margaret mercer
-# September 16, 2024
+# September 20, 2024
 
 # load packages
 library(ctmm)
 library(tidyverse)
 library(data.table)
-
-ind_file <- commandArgs(trailingOnly = TRUE)
-print(ind_file)
 
 individual_gps <- fread(ind_file)
 
@@ -40,6 +37,7 @@ vg <- variogram(individual)
 # Guesstimate the model to obtain initial parameter values
 guess <- ctmm.guess(individual,
                     variogram = vg,
+                    CTMM=ctmm(range=FALSE),
                     interactive = FALSE)
 guess$error <- TRUE
 
@@ -51,15 +49,8 @@ ctmm_name <- paste0("ctmm_", id)
 print(paste0("CTMM fit at ", Sys.time()))
 print(summary(fits))
 
-# Calculate the home ranges (hr)
-hr <- akde(individual, fits, weights=TRUE)
-print("home range created")
-
-assign(paste0("hr_", id), fits)
-hr_name <- paste0("hr_", id)
-
-save(fits, individual, hr, list = c(ctmm_name, t_name, hr_name),
-     file = paste0("data/Model_Fit_Results/", id, "_rr.Rda"))
+save(fits, individual, list = c(ctmm_name, t_name),
+     file = paste0("data/Model_Fit_Results/", id, "_nonrr.Rda"))
 
 print(paste0("Done at ",Sys.time()))
 

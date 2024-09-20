@@ -45,7 +45,7 @@ guess <- ctmm.guess(individual,
 guess$error <- TRUE
 
 # load model
-load('data/Model_Fit_Results/BC_#8_Ben.Rda')
+load('data/Model_Fit_Results/BC_#12_Margaret.Rda')
 
 # return a summary of the fitted models
 summary(fits) # this should list a model $name, $DOF, and $CI
