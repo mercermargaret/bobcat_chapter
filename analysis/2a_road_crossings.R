@@ -108,7 +108,7 @@ getDoParWorkers()
 # A character string for reprojections
 LatLon <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 #Number of simulated replicates per animal
-nReps <- 1000
+nReps <- 10
 # Run the simulations for this animal
 
 x <- foreach(j = 1:nReps) %dopar% {
