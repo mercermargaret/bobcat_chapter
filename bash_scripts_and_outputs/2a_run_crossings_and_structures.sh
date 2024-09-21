@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cross                 # name of the job (make it short!)
+#SBATCH --job-name=roads                 # name of the job (make it short!)
 #SBATCH --partition=standard              # partition to be used (standard OR windfall)
 #SBATCH --account=jmalston                # hpc group name! (always jmalston)
 #SBATCH --time=12:00:00                    # walltime (up to 10-00:00:00(240:00:00))

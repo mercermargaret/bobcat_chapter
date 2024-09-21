@@ -1,4 +1,4 @@
-# road crossing number hypothesis
+# road crossing number hypothesis AND crossing structures hypothesis
 # margaret mercer
 # sept 20, 2024
 
@@ -12,6 +12,8 @@ library(raster)
 library(adehabitatHR)
 library(tidyverse)
 library(geosphere)
+
+# intro stuff ####
 
 # load data
 ind_file <- commandArgs(trailingOnly = TRUE)
@@ -75,19 +77,8 @@ crossings_new <- st_cast((crossings_multi), to = "POINT")
 
 
 # get number of crossings
-real_crossings <- length(crossings_new$geometry)
-real_crossings
-
-# Plot of the most likely path and the road
-plot(path_2, col = "NA")
-lines(roads, col = "#FF0000")
-lines(path_2, col = "#046C9A")
-coords <- st_coordinates(crossings_new)  # Extract coordinates
-points(coords[, 1], coords[, 2], col = "black", pch = 16)  # Plot the points
-title(main = paste(individual@info$identity, " - Crossings: ", real_crossings),
-      family = "serif",
-      font.main = 1,
-      cex.main = 0.85)
+numb_real_crossings <- length(crossings_new$geometry)
+numb_real_crossings
 
 # transform road crossings to sp
 road_crossings_sp <- as(crossings_new, "Spatial")
@@ -166,7 +157,7 @@ x <- foreach(j = 1:nReps) %dopar% {
   
 }
 
-t(paste0("Simulations finished at ", Sys.time()))
+t(paste0("Crossing simulations finished at ", Sys.time()))
 
 
 # 10 sims takes 96 seconds
@@ -176,18 +167,53 @@ t(paste0("Simulations finished at ", Sys.time()))
 # Clean up results
 sim_results <- data.frame("ID" = unlist(lapply(x, function (x) x[1])),
                           "Road_Crossings" = unlist(lapply(x, function (x) x[2])))
-mean_sim_cross <- mean(sim_results$Road_Crossings)
+numb_simulated_crossings <- mean(sim_results$Road_Crossings)
 name <- sim_results[1,1]
 name
 
-# so I want to pull out the mean of the simulated results and compare it to the actual number (real_crossings)
-# I want a dataframe with three columns: one for bobcat name, one for number of crossings, one for stimulated crossings
+
+# now crossing structures ugh
+bridges <- st_read("data/Bridges_As_Lines")
+t(paste0("Bridge data loaded at ", Sys.time()))
+
+# Measuring distance of crossings from passages
+# convert to get distance in m
+crossings_utc <- st_transform(crossings_new, crs = 32633)
+bridges_utc <- st_transform(bridges, crs = 32633)
+# Empty vector to store results
+pass_dists <- vector("numeric", length = length(crossings_utc))
+for(i in 1:length(crossings_utc)){
+  crossing_point <- crossings_utc[i, ]
+  # Find which point in the path is closest to the crossing location
+  dists <- st_distance(crossing_point, bridges_utc)
+  pass_dists[i] <- min(dists)
+}
+
+head(pass_dists)
+
+t(paste0("Pass distances generated at ", Sys.time()))
+
+# Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
+numb_crossings_near_structure <- length(which(pass_dists <= 20))
+
+# merge crossings_new, cross_times, and pass_dists into one dataframe
+crossing_info <- as.data.frame(crossings_new)
+crossing_info$Cross_Times <- cross_times
+crossing_info$Passage_Distances <- pass_dists # check to be sure this works!
+
 # Vector of results to return
-x <- data.frame(name, real_crossings, mean_sim_cross)
+x <- data.frame(name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_structure)
 # Store results in data.frame
 write.table(x, 'results/road_crossings.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
 
-# also I should probably save the full simulation results
-
+# save full simulation results
 save(sim_results,
      file = paste0("results/Number_of_Simulated_Crossings/", name, "_sim_cross.csv"))
+
+# save crossing info dataframe
+save(crossing_info,
+     file = paste0("results/Crossing_Info/", name, "_crossing_info.csv"))
+
+
+
+
