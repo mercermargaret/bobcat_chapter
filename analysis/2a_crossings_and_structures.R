@@ -182,7 +182,7 @@ crossings_utc <- st_transform(crossings_new, crs = 32633)
 bridges_utc <- st_transform(bridges, crs = 32633)
 # Empty vector to store results
 pass_dists <- vector("numeric", length = length(crossings_utc))
-for(i in 1:length(crossings_utc)){
+for(i in 1:length(crossings_utc$LINEARID)){
   crossing_point <- crossings_utc[i, ]
   # Find which point in the path is closest to the crossing location
   dists <- st_distance(crossing_point, bridges_utc)
