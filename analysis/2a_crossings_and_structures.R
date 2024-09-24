@@ -15,6 +15,15 @@ library(geosphere)
 
 # intro stuff ####
 
+# test driving smaller subset of data
+load("results/Model_Fit_Results/Ben_rr.Rda")
+individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/ben.csv")
+individual_gps <- individual_gps[1:50,]
+individual <- as.telemetry(individual_gps)
+individual$identity <- individual_gps$individual.identifier
+slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
+uere(individual) <- 7
+
 # load data
 ind_file <- commandArgs(trailingOnly = TRUE)
 print(ind_file)
@@ -102,7 +111,7 @@ getDoParWorkers()
 # A character string for reprojections
 LatLon <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 #Number of simulated replicates per animal
-nReps <- 10
+nReps <- 1000
 # Run the simulations for this animal
 
 x <- foreach(j = 1:nReps) %dopar% {
@@ -207,11 +216,11 @@ x <- data.frame(name, numb_real_crossings, numb_simulated_crossings, numb_crossi
 write.table(x, 'results/road_crossings.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
 
 # save full simulation results
-save(sim_results,
+write.csv(sim_results,
      file = paste0("results/Number_of_Simulated_Crossings/", name, "_sim_cross.csv"))
 
 # save crossing info dataframe
-save(crossing_info,
+write.csv(crossing_info,
      file = paste0("results/Crossing_Info/", name, "_crossing_info.csv"))
 
 
