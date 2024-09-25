@@ -29,7 +29,7 @@ echo "name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_s
 fi
 
 # Run the R script with the specified input from the array
-Rscript analysis/2b_crossings_NON_rr.R.R "${list[SLURM_ARRAY_TASK_ID]}"
+Rscript analysis/2b_crossings_NON_rr.R "${list[SLURM_ARRAY_TASK_ID]}"
 
 # Print completion message and date
 echo "Script complete"
