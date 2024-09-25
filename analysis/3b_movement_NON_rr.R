@@ -1,6 +1,6 @@
-# movement as function of distance to roads
+# movement as function of distance to roads for non range resident bobcats
 # margaret mercer
-# sept 20, 2024
+# sept 25, 2024
 
 # load packages
 library(ctmm)
@@ -178,24 +178,10 @@ results_dist_and_speed$Speed <- speeds$est
 # plot(results_dist_and_speed$Speed ~ results_dist_and_speed$Distance)
 # # not really a relationship here
 
-# now calculate road density and home range size ####
-# grab home range size
-summary <- summary(individual_akde)
-areas <- as.data.frame(summary$CI)
-area_sq_km <- areas$est
-
-# Calculate total road length in meters
-total_road_length <- st_length(roads_within_range)
-total_road_length_m <- sum(total_road_length)
-total_road_length_km <- as.numeric(total_road_length_m/1000)
-
-# Compute road density (meters of road per square meter of home range)
-road_density <- total_road_length_km / area_sq_km
-
 # Vector of results to return
-x <- data.frame(name, speed, area_sq_km, total_road_length_km, road_density)
+x <- data.frame(name, speed)
 # Store results in data.frame
-write.table(x, 'results/movement_info.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
+write.table(x, 'results/movement_info_non_rr.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
 
 save(results_dist_and_speed,
      file = paste0("results/Dist_from_Road_and_Speed/", name, "_dist_and_speed.csv"))

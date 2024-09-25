@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roads                 # name of the job (make it short!)
+#SBATCH --job-name=move                 # name of the job (make it short!)
 #SBATCH --partition=standard              # partition to be used (standard OR windfall)
 #SBATCH --account=jmalston                # hpc group name! (always jmalston)
 #SBATCH --time=12:00:00                    # walltime (up to 10-00:00:00(240:00:00))
@@ -21,15 +21,15 @@ date
 echo "Initiating script"
 
 # Check if the results file exists
-if [ -f results/road_crossings_non_rr.csv ]; then
-echo "Results file already exists! continuing..."
+if [ -f results/movement_info_non_rr.csv ]; then
+    echo "Results file already exists! continuing..."
 else
-  echo "Creating results file road_crossings_non_rr.csv"
-echo "name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_structure" > results/road_crossings_non_rr.csv
+    echo "Creating results file movement_info_non_rr.csv"
+    echo "name, speed" > results/movement_info_non_rr.csv
 fi
 
 # Run the R script with the specified input from the array
-Rscript analysis/2b_crossings_NON_rr.R "${list[SLURM_ARRAY_TASK_ID]}"
+Rscript analysis/3b_movement_NON_rr.R "${list[SLURM_ARRAY_TASK_ID]}"
 
 # Print completion message and date
 echo "Script complete"
