@@ -15,14 +15,14 @@ library(geosphere)
 
 # intro stuff ####
 
-# test driving smaller subset of data
-load("results/Model_Fit_Results/Ben_rr.Rda")
-individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/ben.csv")
-individual_gps <- individual_gps[1:50,]
-individual <- as.telemetry(individual_gps)
-individual$identity <- individual_gps$individual.identifier
-slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
-uere(individual) <- 7
+# # test driving smaller subset of data
+# load("results/Model_Fit_Results/Ben_rr.Rda")
+# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/ben.csv")
+# individual_gps <- individual_gps[1:50,]
+# individual <- as.telemetry(individual_gps)
+# individual$identity <- individual_gps$individual.identifier
+# slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
+# uere(individual) <- 7
 
 # load data
 ind_file <- commandArgs(trailingOnly = TRUE)

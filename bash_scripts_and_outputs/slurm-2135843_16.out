@@ -1,6 +1,6 @@
-Mon Sep 23 12:31:06 MST 2024
+Tue Sep 24 09:20:02 MST 2024
 Initiating script
-Creating results file road_crossings.csv
+Results file already exists! continuing...
 Loading required package: iterators
 Loading required package: parallel
 Linking to GEOS 3.9.5, GDAL 3.8.5, PROJ 9.4.0; sf_use_s2() is TRUE
@@ -52,17 +52,16 @@ Loading required package: boot
 ✖ dplyr::select()     masks MASS::select(), raster::select()
 ✖ purrr::when()       masks foreach::when()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Beverly_rr.Rda"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Jack_rr.Rda"
      [,1]                                
-[1,] "Data loaded at 2024-09-23 12:31:19"
-Default grid size of 1.00152777777778 hours chosen for bandwidth(...,fast=TRUE).
+[1,] "Data loaded at 2024-09-24 09:20:11"
 $DOF
      area bandwidth 
- 1335.702  1881.797 
+ 809.4890  739.0012 
 
 $CI
-                             low      est     high
-area (square kilometers) 5.65203 5.967821 6.292075
+                              low      est     high
+area (square kilometers) 8.950756 9.600832 10.27337
 
 attr(,"class")
 [1] "area"
@@ -75,25 +74,25 @@ Dimension:     XY
 Bounding box:  xmin: 477936.4 ymin: 3545656 xmax: 511815.3 ymax: 3593305
 Projected CRS: WGS 84 / UTM zone 12N
      [,1]                                 
-[1,] "Roads loaded at 2024-09-23 12:31:24"
+[1,] "Roads loaded at 2024-09-24 09:20:17"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
      [,1]                                                  
-[1,] "Roads within range calculated at 2024-09-23 12:33:15"
+[1,] "Roads within range calculated at 2024-09-24 09:22:04"
      [,1]                                             
-[1,] "Predicted path generated at 2024-09-23 12:40:49"
+[1,] "Predicted path generated at 2024-09-24 09:33:11"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
      [,1]                                             
-[1,] "Road crossings generated at 2024-09-23 14:10:43"
+[1,] "Road crossings generated at 2024-09-24 11:45:22"
 Warning message:
 In st_cast.sf((crossings_multi), to = "POINT") :
   repeating attributes for all sub-geometries for which they may not be constant
-[1] 8447
+[1] 219
 [1] 6
      [,1]                                                  
-[1,] "Crossing simulations finished at 2024-09-23 15:08:08"
-[1] "Beverly"
+[1,] "Crossing simulations finished at 2024-09-24 19:44:09"
+[1] "Jack"
 Reading layer `bridges_as_lines' from data source 
   `/home/u15/mmercer3/proj/bobcat_chapter/data/Bridges_As_Lines' 
   using driver `ESRI Shapefile'
@@ -103,9 +102,9 @@ Dimension:     XY
 Bounding box:  xmin: -111.1472 ymin: 32.15943 xmax: -110.981 ymax: 32.40279
 Geodetic CRS:  WGS 84
      [,1]                                       
-[1,] "Bridge data loaded at 2024-09-23 15:08:08"
-[1] 1751.160 1752.072 1756.145 1757.146 1757.700 1757.750
+[1,] "Bridge data loaded at 2024-09-24 19:44:09"
+[1]  392.0701  389.9513  486.0574  332.1404 5647.9214 5728.4190
      [,1]                                             
-[1,] "Pass distances generated at 2024-09-23 15:09:22"
+[1,] "Pass distances generated at 2024-09-24 19:44:11"
 Script complete
-Mon Sep 23 15:09:22 MST 2024
+Tue Sep 24 19:44:11 MST 2024
