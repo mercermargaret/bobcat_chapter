@@ -124,7 +124,7 @@ x <- data.frame(name, speed, area_sq_km, total_road_length_km, road_density)
 # Store results in data.frame
 write.table(x, 'results/movement_info.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
 
-save(results_dist_and_speed,
+write.csv(results_dist_and_speed,
      file = paste0("results/Dist_from_Road_and_Speed/", name, "_dist_and_speed.csv"))
 
 
