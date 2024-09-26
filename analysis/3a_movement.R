@@ -26,6 +26,7 @@ t(paste0("Data loaded at ", Sys.time()))
 speed <- speed(individual, fits, fast=TRUE, robust=TRUE) # might take a while
 # still breaking. wtf.
 
+t(paste0("Speed function finished at ", Sys.time()))
 
 # estimate instantaneous speeds ####
 speeds <- speeds(individual, fits)
@@ -77,6 +78,8 @@ for (i in 1:length(days)) {
   results[[i]] <- x
 }
 
+t(paste0("Daily speeds calculated at ", Sys.time()))
+
 # even when speed works (on 100 or 1000 rows), this doesn't:
 # Error in ctmm_speed * samp_time : non-numeric argument to binary operator
 # In addition: Warning messages:
@@ -102,7 +105,7 @@ roads <- st_read("data/Roadmap_Wrangled")
 
 # Reproject the roads to match the tracking data
 roads <- st_transform(roads, crs("epsg:4326"))
-
+t(paste0("Roads loaded at ", Sys.time()))
 # create and reproject home range contour
 # Extract the 95% home range contour
 home_range_polygon <- SpatialPolygonsDataFrame.UD(individual_akde)
@@ -155,7 +158,7 @@ for(i in 1:length(individual$timestamp)){
   results_road_dist[i, 1] <- distance
   
 }
-
+t(paste0("Distance to nearest road calculated at ", Sys.time()))
 results_dist_and_speed <- results_road_dist
 
 # # plot to be sure this worked right
@@ -191,6 +194,8 @@ total_road_length_km <- as.numeric(total_road_length_m/1000)
 
 # Compute road density (meters of road per square meter of home range)
 road_density <- total_road_length_km / area_sq_km
+
+t(paste0("Road density calculated at ", Sys.time()))
 
 # Vector of results to return
 x <- data.frame(name, speed, area_sq_km, total_road_length_km, road_density)
