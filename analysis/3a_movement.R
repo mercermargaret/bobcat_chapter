@@ -22,8 +22,12 @@ load(ind_file)
 
 t(paste0("Data loaded at ", Sys.time()))
 
+name <- individual$identity[1]
+name
+
 # estimate average speed ####
 speed <- speed(individual, fits, fast=TRUE, robust=TRUE) 
+speed <- speed$CI[1, "est"]
 
 t(paste0("Speed function finished at ", Sys.time()))
 
@@ -79,7 +83,6 @@ for(i in 1:length(individual$timestamp)){
   
   # select i
   point_i <- individual_sf[i, ]
-  cat("Starting point ",i,"\n") # tells you how far along you are
   
   # Find the nearest road
   nearest_road_idx <- st_nearest_feature(point_i, roads)
