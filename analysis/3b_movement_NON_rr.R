@@ -23,99 +23,11 @@ load(ind_file)
 t(paste0("Data loaded at ", Sys.time()))
 
 # estimate average speed ####
-speed <- speed(individual, fits, fast=TRUE, robust=TRUE) # might take a while
-# still breaking. wtf.
-
+speed <- speed(individual, fits, fast=TRUE, robust=TRUE) 
 
 # estimate instantaneous speeds ####
 speeds <- speeds(individual, fits)
 # its in meters/second
-
-# Estimating daily movement distance over a study period ####
-# First identify how many days the individual was tracked for
-individual$day <- cut(individual$timestamp, breaks = "day")
-days <- unique(individual$day)
-
-# An empty list to fill with the results
-results_daily_distance <- list()
-
-# Loop over the number of days
-for (i in 1:length(days)) {
-  message ("Estimating distance travelled on day", i,": ", days[i])
-  # Select data for the day in question
-  data_subset <- individual[which(individual$day == days[i]), ]
-  # Calculate the duration of the sampling period (in seconds )
-  samp_time <- diff (c(data_subset$t[1],
-                       data_subset$t[nrow(data_subset)]))
-  
-  # Guesstimate the model for initial parameter values
-  guess <- ctmm.guess(individual,
-                      variogram = variogram(individual) ,
-                      interactive = FALSE)
-  # Turn error on
-  guess$error <- TRUE
-  # fits the movement model to the day’s data
-  fit <- ctmm.fit(data_subset,
-                  CTMM = guess)
-  # Calculate speed in m/s
-  ctmm_speed <- speed(object = data_subset,
-                      CTMM = fit,
-                      units = FALSE,
-                      robust=TRUE)
-  # Multiply speed (in m/s) by the sample time (in s)
-  # to get the estimated distance travelled (in m)
-  ctmm_dist <- ctmm_speed * samp_time
-  # Re-name the variable
-  rownames(ctmm_dist) <- "distance(meters)"
-  
-  # And store the results in the list
-  x <- c(i, #The day
-         ctmm_dist[2], #The ML distance estimate
-         ctmm_dist[1], #Min CI
-         ctmm_dist[3]) #Max CI
-  names(x) <- c("date", "dist.ML", "dist.Min", "dist.Max")
-  results[[i]] <- x
-}
-
-# even when speed works (on 100 or 1000 rows), this doesn't:
-# Error in ctmm_speed * samp_time : non-numeric argument to binary operator
-# In addition: Warning messages:
-#   1: In cov.loglike(DIFF$hessian, grad) :
-#   MLE is near a boundary or optimizer failed.
-# 2: In speed.ctmm(CTMM, data = object, t = t, level = level, robust = robust,  :
-#                    Movement model is fractal.
-
-# Finally bind results together as a data frame
-results_daily_distance <- as.data.frame(do.call(rbind, results_daily_distance))
-results_daily_distance$date <- as.Date(days)
-head(results_daily_distance)
-
-
-
-# import roads and create home range ####
-# calculate the AKDE based on the best fit model
-individual_akde <- akde(individual, fits)
-#Return the basic statistics on the HR area
-summary(individual_akde)
-
-roads <- st_read("data/Roadmap_Wrangled")
-
-# Reproject the roads to match the tracking data
-roads <- st_transform(roads, crs("epsg:4326"))
-
-# create and reproject home range contour
-# Extract the 95% home range contour
-home_range_polygon <- SpatialPolygonsDataFrame.UD(individual_akde)
-
-# Convert SpatialPolygonsDataFrame to an sf object
-home_range_sf <- st_as_sf(home_range_polygon)
-
-# tranform to proper crs
-home_range <- st_transform(home_range_sf, crs("epsg:4326"))
-
-# Get the areas that fall on either side of the road
-roads_within_range <- st_intersection(home_range, roads)
-
 
 # calculate distance of each point to nearest road (Noonan 2021) ####
 # First I need to get instantaneous speed at each point as a function of the distance from that point to the road
@@ -186,7 +98,5 @@ write.table(x, 'results/movement_info_non_rr.csv', append=TRUE, row.names=FALSE,
 save(results_dist_and_speed,
      file = paste0("results/Dist_from_Road_and_Speed/", name, "_dist_and_speed.csv"))
 
-save(results_daily_distance,
-     file = paste0("results/Daily_Distance/", name, "_daily_distance.csv"))
 
 
