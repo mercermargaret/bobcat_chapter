@@ -1,4 +1,4 @@
-Thu Sep 26 11:37:31 MST 2024
+Thu Sep 26 12:47:31 MST 2024
 Initiating script
 Results file already exists! continuing...
 Loading required package: iterators
@@ -52,22 +52,22 @@ Loading required package: boot
 ✖ dplyr::select()     masks MASS::select(), raster::select()
 ✖ purrr::when()       masks foreach::when()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Ben_rr.Rda"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Michele_rr.Rda"
      [,1]                                
-[1,] "Data loaded at 2024-09-26 11:37:41"
-[1] "Ben"
+[1,] "Data loaded at 2024-09-26 12:47:41"
+[1] "Michele"
 Warning message:
 In speed.ctmm(CTMM, data = object, t = t, level = level, robust = robust,  :
   Movement model is fractal.
      [,1]                                            
-[1,] "Speed function finished at 2024-09-26 11:37:41"
+[1,] "Speed function finished at 2024-09-26 12:47:41"
 $DOF
      area bandwidth 
- 384.4082  672.8717 
+ 40.19354  58.26282 
 
 $CI
                               low      est     high
-area (square kilometers) 14.80054 16.39912 18.07849
+area (square kilometers) 11.12431 15.55754 20.72266
 
 attr(,"class")
 [1] "area"
@@ -80,12 +80,12 @@ Dimension:     XY
 Bounding box:  xmin: 477936.4 ymin: 3545656 xmax: 511815.3 ymax: 3593305
 Projected CRS: WGS 84 / UTM zone 12N
      [,1]                                 
-[1,] "Roads loaded at 2024-09-26 11:37:44"
+[1,] "Roads loaded at 2024-09-26 12:47:43"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
      [,1]                                                        
-[1,] "Distance to nearest road calculated at 2024-09-26 11:43:02"
+[1,] "Distance to nearest road calculated at 2024-09-26 12:49:51"
      [,1]                                            
-[1,] "Road density calculated at 2024-09-26 11:43:02"
+[1,] "Road density calculated at 2024-09-26 12:49:51"
 Script complete
-Thu Sep 26 11:43:02 MST 2024
+Thu Sep 26 12:49:52 MST 2024

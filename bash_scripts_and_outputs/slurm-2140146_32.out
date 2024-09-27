@@ -1,4 +1,4 @@
-Thu Sep 26 11:37:31 MST 2024
+Thu Sep 26 12:47:30 MST 2024
 Initiating script
 Results file already exists! continuing...
 Loading required package: iterators
@@ -52,21 +52,21 @@ Loading required package: boot
 ✖ dplyr::select()     masks MASS::select(), raster::select()
 ✖ purrr::when()       masks foreach::when()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Avery_rr.Rda"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Val_rr.Rda"
      [,1]                                
-[1,] "Data loaded at 2024-09-26 11:37:41"
-[1] "Avery"
+[1,] "Data loaded at 2024-09-26 12:47:40"
+[1] "Val"
   |                                                                              |                                                                      |   0%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%  |                                                                              |=====================                                                 |  30%  |                                                                              |========================                                              |  35%  |                                                                              |============================                                          |  40%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |==========================================                            |  60%  |                                                                              |==============================================                        |  65%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  75%  |                                                                              |========================================================              |  80%  |                                                                              |============================================================          |  85%  |                                                                              |===============================================================       |  90%  |                                                                              |==================================================================    |  95%  |                                                                              |======================================================================| 100%
      [,1]                                            
-[1,] "Speed function finished at 2024-09-26 11:44:32"
-Default grid size of 40.0444444444444 minutes chosen for bandwidth(...,fast=TRUE).
+[1,] "Speed function finished at 2024-09-26 12:55:04"
+Default grid size of 40.0277777777778 minutes chosen for bandwidth(...,fast=TRUE).
 $DOF
      area bandwidth 
- 1292.252  2005.030 
+ 1124.718  1797.547 
 
 $CI
-                              low      est     high
-area (square kilometers) 6.931496 7.325503 7.730249
+                              low      est    high
+area (square kilometers) 19.57993 20.77657 22.0082
 
 attr(,"class")
 [1] "area"
@@ -79,12 +79,12 @@ Dimension:     XY
 Bounding box:  xmin: 477936.4 ymin: 3545656 xmax: 511815.3 ymax: 3593305
 Projected CRS: WGS 84 / UTM zone 12N
      [,1]                                 
-[1,] "Roads loaded at 2024-09-26 11:44:41"
+[1,] "Roads loaded at 2024-09-26 12:55:13"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
      [,1]                                                        
-[1,] "Distance to nearest road calculated at 2024-09-26 11:55:24"
+[1,] "Distance to nearest road calculated at 2024-09-26 13:06:52"
      [,1]                                            
-[1,] "Road density calculated at 2024-09-26 11:55:24"
+[1,] "Road density calculated at 2024-09-26 13:06:52"
 Script complete
-Thu Sep 26 11:55:24 MST 2024
+Thu Sep 26 13:06:52 MST 2024

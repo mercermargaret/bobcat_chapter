@@ -67,3 +67,30 @@ Projected CRS: WGS 84 / UTM zone 12N
 [1,] "Roads loaded at 2024-09-26 10:19:52"
      [,1]                                             
 [1,] "Predicted path generated at 2024-09-26 10:35:19"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+     [,1]                                             
+[1,] "Road crossings generated at 2024-09-26 14:18:36"
+Warning message:
+In st_cast.sf((crossings_multi), to = "POINT") :
+  repeating attributes for all sub-geometries for which they may not be constant
+[1] 4251
+[1] 6
+     [,1]                                                  
+[1,] "Crossing simulations finished at 2024-09-27 03:24:30"
+[1] "Danielle"
+Reading layer `bridges_as_lines' from data source 
+  `/home/u15/mmercer3/proj/bobcat_chapter/data/Bridges_As_Lines' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 81 features and 10 fields
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: -111.1472 ymin: 32.15943 xmax: -110.981 ymax: 32.40279
+Geodetic CRS:  WGS 84
+     [,1]                                       
+[1,] "Bridge data loaded at 2024-09-27 03:24:31"
+[1] 2272.918 2240.922 2351.048 2363.929 2879.413 2896.094
+     [,1]                                             
+[1,] "Pass distances generated at 2024-09-27 03:25:14"
+Script complete
+Fri Sep 27 03:25:15 MST 2024

@@ -1,6 +1,6 @@
-Thu Sep 26 11:37:30 MST 2024
+Thu Sep 26 12:47:31 MST 2024
 Initiating script
-Creating results file movement_info.csv
+Results file already exists! continuing...
 Loading required package: iterators
 Loading required package: parallel
 Linking to GEOS 3.9.5, GDAL 3.8.5, PROJ 9.4.0; sf_use_s2() is TRUE
@@ -52,21 +52,21 @@ Loading required package: boot
 ✖ dplyr::select()     masks MASS::select(), raster::select()
 ✖ purrr::when()       masks foreach::when()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Beverly_rr.Rda"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Lisa_rr.Rda"
      [,1]                                
-[1,] "Data loaded at 2024-09-26 11:37:42"
-[1] "Beverly"
+[1,] "Data loaded at 2024-09-26 12:47:42"
+[1] "Lisa"
   |                                                                              |                                                                      |   0%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%  |                                                                              |=====================                                                 |  30%  |                                                                              |========================                                              |  35%  |                                                                              |============================                                          |  40%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |==========================================                            |  60%  |                                                                              |==============================================                        |  65%  |                                                                              |=================================================                     |  70%  |                                                                              |====================================================                  |  75%  |                                                                              |========================================================              |  80%  |                                                                              |============================================================          |  85%  |                                                                              |===============================================================       |  90%  |                                                                              |==================================================================    |  95%  |                                                                              |======================================================================| 100%
      [,1]                                            
-[1,] "Speed function finished at 2024-09-26 11:44:42"
-Default grid size of 1.00152777777778 hours chosen for bandwidth(...,fast=TRUE).
+[1,] "Speed function finished at 2024-09-26 12:52:48"
+Default grid size of 51.4214285714286 minutes chosen for bandwidth(...,fast=TRUE).
 $DOF
      area bandwidth 
- 1335.702  1881.797 
+ 1050.971  1271.463 
 
 $CI
-                             low      est     high
-area (square kilometers) 5.65203 5.967821 6.292075
+                              low      est     high
+area (square kilometers) 6.481844 6.892292 7.315161
 
 attr(,"class")
 [1] "area"
@@ -79,12 +79,12 @@ Dimension:     XY
 Bounding box:  xmin: 477936.4 ymin: 3545656 xmax: 511815.3 ymax: 3593305
 Projected CRS: WGS 84 / UTM zone 12N
      [,1]                                 
-[1,] "Roads loaded at 2024-09-26 11:44:50"
+[1,] "Roads loaded at 2024-09-26 12:52:56"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
      [,1]                                                        
-[1,] "Distance to nearest road calculated at 2024-09-26 11:54:34"
+[1,] "Distance to nearest road calculated at 2024-09-26 13:00:32"
      [,1]                                            
-[1,] "Road density calculated at 2024-09-26 11:54:34"
+[1,] "Road density calculated at 2024-09-26 13:00:32"
 Script complete
-Thu Sep 26 11:54:34 MST 2024
+Thu Sep 26 13:00:32 MST 2024

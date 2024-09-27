@@ -1,6 +1,6 @@
-Thu Sep 26 10:19:37 MST 2024
+Thu Sep 26 12:47:30 MST 2024
 Initiating script
-Creating results file road_crossings_non_rr.csv
+Results file already exists! continuing...
 Loading required package: iterators
 Loading required package: parallel
 Linking to GEOS 3.9.5, GDAL 3.8.5, PROJ 9.4.0; sf_use_s2() is TRUE
@@ -52,9 +52,25 @@ Loading required package: boot
 ✖ dplyr::select()     masks MASS::select(), raster::select()
 ✖ purrr::when()       masks foreach::when()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Tippy_nonrr.Rda"
+[1] "/home/u15/mmercer3/proj/bobcat_chapter/results/Model_Fit_Results/Cassidy_rr.Rda"
      [,1]                                
-[1,] "Data loaded at 2024-09-26 10:19:47"
+[1,] "Data loaded at 2024-09-26 12:47:41"
+[1] "Cassidy"
+Warning message:
+In speed.ctmm(CTMM, data = object, t = t, level = level, robust = robust,  :
+  Movement model is fractal.
+     [,1]                                            
+[1,] "Speed function finished at 2024-09-26 12:47:41"
+$DOF
+     area bandwidth 
+ 75.43186 132.12551 
+
+$CI
+                              low      est     high
+area (square kilometers) 1.620015 2.058108 2.547837
+
+attr(,"class")
+[1] "area"
 Reading layer `roadmap' from data source 
   `/home/u15/mmercer3/proj/bobcat_chapter/data/Roadmap_Wrangled' 
   using driver `ESRI Shapefile'
@@ -64,33 +80,12 @@ Dimension:     XY
 Bounding box:  xmin: 477936.4 ymin: 3545656 xmax: 511815.3 ymax: 3593305
 Projected CRS: WGS 84 / UTM zone 12N
      [,1]                                 
-[1,] "Roads loaded at 2024-09-26 10:19:48"
-     [,1]                                             
-[1,] "Predicted path generated at 2024-09-26 10:23:29"
+[1,] "Roads loaded at 2024-09-26 12:47:42"
 Warning message:
 attribute variables are assumed to be spatially constant throughout all geometries 
-     [,1]                                             
-[1,] "Road crossings generated at 2024-09-26 11:05:49"
-Warning message:
-In st_cast.sf((crossings_multi), to = "POINT") :
-  repeating attributes for all sub-geometries for which they may not be constant
-[1] 1619
-[1] 6
-     [,1]                                                  
-[1,] "Crossing simulations finished at 2024-09-26 17:25:05"
-[1] "Tippy"
-Reading layer `bridges_as_lines' from data source 
-  `/home/u15/mmercer3/proj/bobcat_chapter/data/Bridges_As_Lines' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 81 features and 10 fields
-Geometry type: LINESTRING
-Dimension:     XY
-Bounding box:  xmin: -111.1472 ymin: 32.15943 xmax: -110.981 ymax: 32.40279
-Geodetic CRS:  WGS 84
-     [,1]                                       
-[1,] "Bridge data loaded at 2024-09-26 17:25:05"
-[1] 2450.4161  513.5618 1434.0990 1949.1081 1008.3484 5182.0192
-     [,1]                                             
-[1,] "Pass distances generated at 2024-09-26 17:25:20"
+     [,1]                                                        
+[1,] "Distance to nearest road calculated at 2024-09-26 12:50:25"
+     [,1]                                            
+[1,] "Road density calculated at 2024-09-26 12:50:25"
 Script complete
-Thu Sep 26 17:25:21 MST 2024
+Thu Sep 26 12:50:25 MST 2024
