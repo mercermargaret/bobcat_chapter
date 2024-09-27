@@ -1,4 +1,5 @@
-# road crossing number hypothesis AND crossing structures hypothesis
+# full analysis of non rr bobcats 
+# (speed not included because can't calculate speed with BM model)
 # margaret mercer
 # sept 20, 2024
 
@@ -14,10 +15,10 @@ library(tidyverse)
 library(geosphere)
 
 # intro stuff ####
-
+# 
 # # test driving smaller subset of data
-# load("results/Model_Fit_Results/Ben_rr.Rda")
-# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/ben.csv")
+# load("results/Model_Fit_Results/Danielle_nonrr.Rda")
+# individual_gps <- read.csv("data/Bobcat_Individuals/non_range_resident/danielle_NOT_RR.csv")
 # individual_gps <- individual_gps[1:50,]
 # individual <- as.telemetry(individual_gps)
 # individual$identity <- individual_gps$individual.identifier
@@ -35,31 +36,11 @@ t(paste0("Data loaded at ", Sys.time()))
 # now we have "fits" (model fit), "hr" (home range), and "individual" (telemetry object). 
 # Each of these is duplicated and the copy is named after the bobcat
 
-# import roads and create home range ####
-# calculate the AKDE based on the best fit model
-individual_akde <- akde(individual, fits)
-#Return the basic statistics on the HR area
-summary(individual_akde)
-
 roads <- st_read("data/Roadmap_Wrangled")
 t(paste0("Roads loaded at ", Sys.time()))
 
 # Reproject the roads to match the tracking data
 roads <- st_transform(roads, crs("epsg:4326"))
-
-# create and reproject home range contour
-# Extract the 95% home range contour
-home_range_polygon <- SpatialPolygonsDataFrame.UD(individual_akde)
-
-# Convert SpatialPolygonsDataFrame to an sf object
-home_range_sf <- st_as_sf(home_range_polygon)
-
-# tranform to proper crs
-home_range <- st_transform(home_range_sf, crs("epsg:4326"))
-
-# Get the roads that fall within home range
-roads_within_range <- st_intersection(home_range, roads)
-t(paste0("Roads within range calculated at ", Sys.time()))
 
 # estimate number of road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
@@ -213,16 +194,12 @@ crossing_info$Passage_Distances <- pass_dists # check to be sure this works!
 # Vector of results to return
 x <- data.frame(name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_structure)
 # Store results in data.frame
-write.table(x, 'results/road_crossings.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
+write.table(x, 'results/results_non_rr.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')
 
 # save full simulation results
 write.csv(sim_results,
-     file = paste0("results/Number_of_Simulated_Crossings/", name, "_sim_cross.csv"))
+          file = paste0("results/Number_of_Simulated_Crossings/", name, "_sim_cross_non_rr.csv"))
 
 # save crossing info dataframe
 write.csv(crossing_info,
-     file = paste0("results/Crossing_Info/", name, "_crossing_info.csv"))
-
-
-
-
+          file = paste0("results/Crossing_Info/", name, "_crossing_info_non_rr.csv"))

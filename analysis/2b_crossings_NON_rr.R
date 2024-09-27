@@ -183,7 +183,7 @@ head(pass_dists)
 t(paste0("Pass distances generated at ", Sys.time()))
 
 # Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
-numb_crossings_near_structure <- length(which(pass_dists <= 20))
+numb_crossings_near_structure <- length(which(pass_dists <= 7))
 
 # merge crossings_new, cross_times, and pass_dists into one dataframe
 crossing_info <- as.data.frame(crossings_new)
