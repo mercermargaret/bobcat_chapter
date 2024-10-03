@@ -15,6 +15,15 @@ library(tidyverse)
 library(geosphere)
 
 # intro stuff ####
+
+# load data
+ind_file <- commandArgs(trailingOnly = TRUE)
+print(ind_file)
+
+load(ind_file)
+
+t(paste0("Data loaded at ", Sys.time()))
+
 # 
 # # test driving smaller subset of data
 # load("results/Model_Fit_Results/Danielle_nonrr.Rda")
@@ -25,13 +34,6 @@ library(geosphere)
 # slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
 # uere(individual) <- 7
 
-# load data
-ind_file <- commandArgs(trailingOnly = TRUE)
-print(ind_file)
-
-load(ind_file)
-
-t(paste0("Data loaded at ", Sys.time()))
 
 # now we have "fits" (model fit), "hr" (home range), and "individual" (telemetry object). 
 # Each of these is duplicated and the copy is named after the bobcat
@@ -82,7 +84,42 @@ for(i in 1:nrow(road_crossings_sp@coords)){
 
 # head(cross_times)
 
-# see whether they crossed roads more or less frequently than expected at random (Noonan 2021) ####
+# now crossing structures  ####
+bridges <- st_read("data/Bridges_As_Lines")
+t(paste0("Bridge data loaded at ", Sys.time()))
+
+# Measuring distance of crossings from passages
+# convert to get distance in m
+crossings_utc <- st_transform(crossings_new, crs = 32633)
+bridges_utc <- st_transform(bridges, crs = 32633)
+# Empty vector to store results
+pass_dists <- vector("numeric", length = length(crossings_utc))
+for(i in 1:length(crossings_utc$LINEARID)){
+  crossing_point <- crossings_utc[i, ]
+  # Find which point in the path is closest to the crossing location
+  dists <- st_distance(crossing_point, bridges_utc)
+  pass_dists[i] <- min(dists)
+}
+
+head(pass_dists)
+
+t(paste0("Pass distances generated at ", Sys.time()))
+
+# Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
+numb_crossings_near_structure <- length(which(pass_dists <= 7))
+
+# merge crossings_new, cross_times, and pass_dists into one dataframe
+crossing_info <- as.data.frame(crossings_new)
+crossing_info$Cross_Times <- cross_times
+crossing_info$Passage_Distances <- pass_dists
+
+# get distances of each simulated crossing from nearest crossing structure
+# output: add column to the "sim_results" dataframe with:
+# total number of simulated crossings within 7m of crossing structure
+# average distance of all crossings in that simulation from nearest road
+
+
+# see how number of crossings and distance to crossing structures differs in simulations ####
 # Set up the paralellisation
 # Reg. multiple cores for DoParallel
 nCores <- 6
@@ -118,24 +155,40 @@ x <- foreach(j = 1:nReps) %dopar% {
   Sim_Road_Cross_Count <- length(sim_crossings_new$LINEARID)
   
   
-  # Crossing times for the simulated animal
-  # Requires conversion to lat long for the distHaversine function
-  sim_road_crossings_sp <- as(sim_crossings_new, "Spatial")
-  # road_crossings_latlong <- spTransform(sim_road_crossings, LatLon)
-  path_sim_latlong <- spTransform(path_sim, LatLon)
-  # Find times it crossed the road
-  sim_road_cross_times <- vector()
-  for(i in 1:nrow(sim_road_crossings_sp@coords)){
+  # # Crossing times for the simulated animal
+  # # Requires conversion to lat long for the distHaversine function
+  # sim_road_crossings_sp <- as(sim_crossings_new, "Spatial")
+  # # road_crossings_latlong <- spTransform(sim_road_crossings, LatLon)
+  # path_sim_latlong <- spTransform(path_sim, LatLon)
+  # # Find times it crossed the road
+  # sim_road_cross_times <- vector()
+  # for(i in 1:nrow(sim_road_crossings_sp@coords)){
+  #   dists <- geosphere::distHaversine(sim_road_crossings_sp@coords[i,], path_sim_latlong@coords)
+  #   sim_road_cross_times [i] <- path_sim@data[which(dists == min(dists)),"timestamp"]
+  # }
+  sim_crossings_utc <- st_transform(sim_crossings_new, crs = 32633)
+  
+  # create empty vector to store results
+  sim_pass_dists <- vector("numeric", length = length(sim_crossings_utc))
+  for(i in 1:length(sim_crossings_utc$LINEARID)){
+    sim_crossing_point <- sim_crossings_utc[i, ]
     # Find which point in the path is closest to the crossing location
-    dists <- geosphere::distHaversine(sim_road_crossings_sp@coords[i,], path_sim_latlong@coords)
-    sim_road_cross_times [i] <- path_sim@data[which(dists == min(dists)),"timestamp"]
+    sim_dists <- st_distance(sim_crossing_point, bridges_utc)
+    sim_pass_dists[i] <- min(sim_dists)
   }
   
+  # Average distance to nearest crossing structure
+  sim_average_dist <- mean(sim_pass_dists)
+  
+  # Number of crossings near crossing structure
+  sim_crossings_near_structure <- as.numeric(length(which(sim_pass_dists <= 7)))
   
   # list of results to return
   list(fits@info$identity,
        # sim_road_cross_times,
-       Sim_Road_Cross_Count)
+       Sim_Road_Cross_Count,
+       sim_average_dist,
+       sim_crossings_near_structure)
   
   # # use this to troubleshoot
   # plot(path_sim, col = "NA")
@@ -149,47 +202,16 @@ x <- foreach(j = 1:nReps) %dopar% {
 
 t(paste0("Crossing simulations finished at ", Sys.time()))
 
-
-# 10 sims takes 96 seconds
-# 100 sims takes 24 minutes
-# 1000 sims should take 3ish hours
-
 # Clean up results
 sim_results <- data.frame("ID" = unlist(lapply(x, function (x) x[1])),
-                          "Road_Crossings" = unlist(lapply(x, function (x) x[2])))
+                          "Road_Crossings" = unlist(lapply(x, function (x) x[2])),
+                          "Average_Distance_From_Crossing_Structure" = unlist(lapply(x, function (x) x[3])),
+                          "Numb_Crossings_Near_Structure" = unlist(lapply(x, function (x) x[4])))
 numb_simulated_crossings <- mean(sim_results$Road_Crossings)
 name <- sim_results[1,1]
 name
 
-
-# now crossing structures ugh
-bridges <- st_read("data/Bridges_As_Lines")
-t(paste0("Bridge data loaded at ", Sys.time()))
-
-# Measuring distance of crossings from passages
-# convert to get distance in m
-crossings_utc <- st_transform(crossings_new, crs = 32633)
-bridges_utc <- st_transform(bridges, crs = 32633)
-# Empty vector to store results
-pass_dists <- vector("numeric", length = length(crossings_utc))
-for(i in 1:length(crossings_utc$LINEARID)){
-  crossing_point <- crossings_utc[i, ]
-  # Find which point in the path is closest to the crossing location
-  dists <- st_distance(crossing_point, bridges_utc)
-  pass_dists[i] <- min(dists)
-}
-
-head(pass_dists)
-
-t(paste0("Pass distances generated at ", Sys.time()))
-
-# Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
-numb_crossings_near_structure <- length(which(pass_dists <= 7))
-
-# merge crossings_new, cross_times, and pass_dists into one dataframe
-crossing_info <- as.data.frame(crossings_new)
-crossing_info$Cross_Times <- cross_times
-crossing_info$Passage_Distances <- pass_dists # check to be sure this works!
+# print outputs ####
 
 # Vector of results to return
 x <- data.frame(name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_structure)
