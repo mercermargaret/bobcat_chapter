@@ -10,6 +10,7 @@ rm(list=ls())
 # load packages
 library(tidyverse)
 library(lme4)
+library(lmerTest)
 
 # load both range resident and non range resident data
 results_rr <- read.csv("results/results_rr.csv")
@@ -33,19 +34,19 @@ simulated <- results$numb_simulated_crossings
 hist(real)
 hist(simulated)
 
-# wilcox test
-wilcoxon_result <- wilcox.test(real, simulated, paired = TRUE, na.rm = TRUE)
-print(wilcoxon_result)
+# # wilcox test
+# wilcoxon_result <- wilcox.test(real, simulated, paired = TRUE, na.rm = TRUE)
+# print(wilcoxon_result)
+# 
+# # paired t test
+# t_result <- t.test(real, simulated, paired = TRUE, na.rm = TRUE)
+# print(t_result)
 
-# paired t test
-t_result <- t.test(real, simulated, paired = TRUE, na.rm = TRUE)
-print(t_result)
-
-# log transform them
-log_real <- log(real)
-log_sim <- log(simulated)
-t_result <- t.test(log_real, log_sim, paired = TRUE, na.rm = TRUE)
-print(t_result)
+# # log transform them
+# log_real <- log(real)
+# log_sim <- log(simulated)
+# t_result <- t.test(log_real, log_sim, paired = TRUE, na.rm = TRUE)
+# print(t_result)
 
 # sqrt transform
 sqrt_real <- (sqrt(real))
@@ -78,10 +79,13 @@ points_new<- points %>%
 # random effect of individual for just intercept
 model1 <- lmer(Speed ~ log(Distance) + (1 | Individual_ID), data = points_new)
 summary(model1)
-# random effect of individual for slope and intercept
-model2 <- lmer(Speed ~ log(Distance) + (log(Distance) | Individual_ID), data = points_new)
-# Model failed to converge! ^^
-summary(model2)
+ggplot(data = points_new, aes(x = log(Distance), y = Speed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+# # random effect of individual for slope and intercept
+# model2 <- lmer(Speed ~ log(Distance) + (log(Distance) | Individual_ID), data = points_new)
+# # Model failed to converge! ^^
+# summary(model2)
 
 # log transform distance because distance from road is likely to only matter when distance is SMALL
 # use random effect for slope AND intercept (if I can) since both are likely to vary by individual
@@ -91,6 +95,11 @@ density <- results$road_density
 area <- results$area_sq_km
 plot(area ~ density)
 glm(area ~ density)
+summary(glm(area ~ density))
+ggplot(results, aes(x = road_density, y = area_sq_km)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
 
 # test for relationship between road density and average speed
 speed <- results$speed
@@ -104,3 +113,31 @@ plot(speed ~ area)
 
 # get median distance of road crossing
 # compare percentage of crossings near a structure between real and simulated data
+# pull and merge crossing info
+file_list <- list.files(path = "results/Crossing_Info", pattern = "*.csv", full.names = TRUE)
+crossings <- do.call(rbind, lapply(file_list, function(file) {
+  data <- read.csv(file)
+  data$Individual_ID <- tools::file_path_sans_ext(basename(file))  # Extract filename without extension
+  return(data)
+}))
+# get rid of unwanted detail in name column
+crossings$Individual_ID <- sub("_.*", "", crossings$Individual_ID)
+
+median(crossings$Passage_Distances, na.rm = TRUE)
+# PROBLEM!!!! if we're just getting the nearest crossing structure, the nearest could be BEHIND the bobcat, or NOT ON THE ROAD IT'S CROSSING
+# ????how would we deal with that??
+hist(crossings$Passage_Distances)
+
+mean(results$numb_crossings_near_structure, na.rm = TRUE)
+median(results$numb_crossings_near_structure, na.rm = TRUE)
+
+results$percent_crossings_near_structure <- (results$numb_crossings_near_structure/results$numb_real_crossings)
+median(results$percent_crossings_near_structure)
+mean(results$percent_crossings_near_structure)
+min(results$percent_crossings_near_structure)
+max(results$percent_crossings_near_structure)
+sd(results$percent_crossings_near_structure)
+
+crossings_near_structure <- sum(results$numb_crossings_near_structure)
+total_crossings <- sum(results$numb_real_crossings)
+crossings_near_structure/total_crossings
