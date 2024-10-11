@@ -13,14 +13,14 @@ library(raster)
 rm(list=ls())
 
 # import data
-# first roadmap
-streets <- st_read("../data_too_big/Raw_Roads_AZ/Street_Roads/TIGER_Streets")
+# first roadmaps
+all_streets <- st_read("../data_too_big/Dissolved_Street_Network/") # this is all public streets
+fha_categories <- st_read("../data_too_big/Federal_Highway_Administration_Functional_Categories/") # this is category information for most roads but not small ones
+speed_limits <- st_read("../data_too_big/Speed_Limits/") # this has all the same roads as fha but with speed limit information
+lanes <- st_read("../data_too_big/Number_of_Lanes/") # this has the fewest number of roads, and only the more major ones
+
 # then bobcats
 bobcats <- read.csv("data/bobcat_locs_all.csv")
-
-# Okkkkkk so let's look at primary versus secondary
-primary <- st_read("../data_too_big/Raw_Roads_AZ/Primary_Roads/TIGER_Primary")
-secondary <- st_read("../data_too_big/Raw_Roads_AZ/Secondary_Roads/TIGER_Secondary")
 
 # this is a lot
 # lets trim down to only within study area
@@ -42,8 +42,8 @@ proj4string(bobcats_all_sp) <- CRS("+proj=longlat +datum=WGS84") # Use longlat p
 
 bobcats_all_mcp <- mcp(bobcats_all_sp[, "id"], percent = 100) # calculate mcp
 
-plot(bobcats_all_sp, col = as.factor(bobcats_all_sp@data$id), pch = 16) # map to be sure it worked
-plot(bobcats_all_mcp, col = alpha(1:5, 0.5), add = TRUE)
+# plot(bobcats_all_sp, col = as.factor(bobcats_all_sp@data$id), pch = 16) # map to be sure it worked
+# plot(bobcats_all_mcp, col = alpha(1:5, 0.5), add = TRUE)
 
 str(bobcats_all_mcp)
 
@@ -65,114 +65,96 @@ plot(st_geometry(buffered_sf), add = TRUE, border = "red")
 study_area <- buffered_sf
 
 # set crs of road map
-streets <- st_transform(streets, crs(study_area))
-
+all_streets <- st_transform(all_streets, crs(study_area))
 # find the intersection between roadmaps and range polygon
-streets_inside <- st_intersection(streets, study_area)
-
-ggplot(data = streets_inside) +
+all_streets <- st_intersection(all_streets, study_area)
+ggplot(data = all_streets) +
   geom_sf() +
   theme_classic()
 
-# YESSS IT WORKED!!!
 
-# do same for primary ...
-primary <- st_transform(primary, crs(study_area))
-primary_inside <- st_intersection(primary, study_area)
-ggplot(data = primary_inside) +
-  geom_sf() +
-  theme_classic()
-# primary is JUST the highway
-
-# ... and secondary
-secondary <- st_transform(secondary, crs(study_area))
-secondary_inside <- st_intersection(secondary, study_area)
-ggplot(data = secondary_inside) +
-  geom_sf() +
-  theme_classic()
-# secondary is highway plus a couple major roads
-
-# # what if we try named vs unnamed roads?
-# named_streets <- subset(streets_inside, !is.na(FULLNAME))
-# unnamed_streets <- subset(streets_inside, is.na(FULLNAME))
-# ggplot(data = named_streets) +
-#   geom_sf() +
-#   theme_classic()
-# ggplot(data = unnamed_streets) +
-#   geom_sf() +
-#   theme_classic()
-# # nope, there are hardly any unnamed roads
-
-# what about splitting it up by RTTYP?
-# county <- subset(streets_inside, RTTYP == "C") # only one tiny road segment here
-interstate <- subset(streets_inside, RTTYP == "I")
-common <- subset(streets_inside, RTTYP == "M")
-other <- subset(streets_inside, RTTYP == "O" | is.na(RTTYP))
-state <- subset(streets_inside, RTTYP == "S")
-# us <- subset(streets_inside, RTTYP == "U") # nothing here within study area so no need
-
-
-# ggplot(data = us) +
-#   geom_sf() +
-#   theme_classic()
-ggplot(data = interstate) +
-  geom_sf() +
-  theme_classic()
-ggplot(data = state) +
-  geom_sf() +
-  theme_classic()
-# ggplot(data = county) +
-#   geom_sf() +
-#   theme_classic()
-ggplot(data = common) +
-  geom_sf() +
-  theme_classic()
-ggplot(data = other) +
+# do same for other maps
+fha_categories <- st_transform(fha_categories, crs(study_area))
+fha_categories <- st_intersection(fha_categories, study_area)
+ggplot(data = fha_categories) +
   geom_sf() +
   theme_classic()
 
-# or plot all at once with different colors
-ggplot() +
-  geom_sf(data = common, fill = "white", color = "white") +
-  geom_sf(data = common, fill = "lightblue", color = "lightblue") +
-  geom_sf(data = state, fill = "green", color = "green") +
-  geom_sf(data = interstate, fill = "red", color = "red") +
-  geom_sf(data = other, fill = "orange", color = "orange") +
-  theme_classic() +
-  labs(title = "All Streets Colored By RTTYP")
+speed_limits <- st_transform(speed_limits, crs(study_area))
+speed_limits <- st_intersection(speed_limits, study_area)
+ggplot(data = speed_limits) +
+  geom_sf() +
+  theme_classic()
+
+lanes <- st_transform(lanes, crs(study_area))
+lanes <- st_intersection(lanes, study_area)
+ggplot(data = lanes) +
+  geom_sf() +
+  theme_classic()
+
+table(fha_categories$FUNCCAT_DS)
+
+# rur_inter <- subset(fha_categories, FUNCCAT_DS == "Rural Interstate")
+# urb_int <- subset(fha_categories, FUNCCAT_DS == "Urban Interstate")
+# urb_free <- subset(fha_categories, FUNCCAT_DS == "Urban Other Freeway")
+# urb_princ_art <- subset(fha_categories, FUNCCAT_DS == "Urban Principal Arterial")
+# urb_min_art <- subset(fha_categories, FUNCCAT_DS == "Urban Minor Arterial")
+# rur_min_art <- subset(fha_categories, FUNCCAT_DS == "Rural Minor Arterial")
+# rur_maj_coll <- subset(fha_categories, FUNCCAT_DS == "Rural Major Collector")
+# rur_min_coll <- subset(fha_categories, FUNCCAT_DS == "Rural Minor Collector")
+# urb_coll <- subset(fha_categories, FUNCCAT_DS == "Urban Collector")
+# urb_min_coll <- subset(fha_categories, FUNCCAT_DS == "Urban Minor Collector")
+# urb_loc <- subset(fha_categories, FUNCCAT_DS == "Urban Local")
+# 
+# high <- subset(fha_categories, FUNCCAT_DS == "Rural Interstate" | 
+#                  FUNCCAT_DS == "Urban Interstate" | 
+#                  FUNCCAT_DS == "Urban Other Freeway" |
+#                  FUNCCAT_DS == "Urban Principal Arterial" |
+#                  FUNCCAT_DS == "Urban Minor Arterial" |
+#                  FUNCCAT_DS == "Rural Minor Arterial")
+# medium <- subset(fha_categories, FUNCCAT_DS == "Rural Major Collector" | 
+#                    FUNCCAT_DS == "Rural Minor Collector" | 
+#                    FUNCCAT_DS == "Urban Collector" |
+#                    FUNCCAT_DS == "Urban Minor Collector")
+# low <- subset(fha_categories, FUNCCAT_DS == "Urban Local")
+# 
+# 
+# 
+# ggplot() +
+#   geom_sf(data = low, fill = "lightblue", color = "lightblue") +
+#   geom_sf(data = medium, fill = "yellow", color = "yellow") +
+#   geom_sf(data = high, fill = "red", color = "red") +
+#   theme_classic() +
+#   labs(title = "Colored by Functional Category")
 
 
-# split by MTFCC
-S1100 <- subset(streets_inside, MTFCC == "S1100")
-S1200 <- subset(streets_inside, MTFCC == "S1200")
-S1400 <- subset(streets_inside, MTFCC == "S1400")
-S1500 <- subset(streets_inside, MTFCC == "S1500")
-S1630 <- subset(streets_inside, MTFCC == "S1630")
-S1640 <- subset(streets_inside, MTFCC == "S1640")
-S1710 <- subset(streets_inside, MTFCC == "S1710")
-S1730 <- subset(streets_inside, MTFCC == "S1730")
-S1740 <- subset(streets_inside, MTFCC == "S1740")
-S1750 <- subset(streets_inside, MTFCC == "S1750")
-S1780 <- subset(streets_inside, MTFCC == "S1780")
-S1820 <- subset(streets_inside, MTFCC == "S1820")
+# now lets split up the all_streets data
+front <- subset(all_streets, ROADCAT_DS == "Frontage road")
+interstate <- subset(all_streets, ROADCAT_DS == "Interstate highway")
+inter_ramp <- subset(all_streets, ROADCAT_DS == "Interstate ramp")
+maj_road <- subset(all_streets, ROADCAT_DS == "Major local road")
+maj_ramp <- subset(all_streets, ROADCAT_DS == "Major road ramp")
+min_road <- subset(all_streets, ROADCAT_DS == "Minor local road")
+state <- subset(all_streets, ROADCAT_DS == "State route")
+state_ramp <- subset(all_streets, ROADCAT_DS == "State route ramp")
+
+high <- subset(all_streets, ROADCAT_DS == "Interstate highway" | 
+                 ROADCAT_DS == "Interstate ramp" | 
+                 ROADCAT_DS == "State route" |
+                 ROADCAT_DS == "State route ramp" |
+                 ROADCAT_DS == "Frontage road" | 
+                 ROADCAT_DS == "Major local road" | 
+                 ROADCAT_DS == "Major road ramp")
+low <- subset(all_streets, ROADCAT_DS == "Minor local road")
 
 ggplot() +
-  geom_sf(data = S1400, fill = "lightblue", color = "lightblue") +
-  geom_sf(data = S1630, fill = "yellow", color = "yellow") +
-  geom_sf(data = S1780, fill = "orange", color = "orange") +
-  geom_sf(data = S1740, fill = "blue", color = "blue") +
-  geom_sf(data = S1100, fill = "purple", color = "purple") +
-  geom_sf(data = S1200, fill = "green", color = "green") +
-  geom_sf(data = S1500, fill = "red", color = "red") +
-  geom_sf(data = S1640, fill = "red", color = "red") +
-  geom_sf(data = S1710, fill = "red", color = "red") +
-  geom_sf(data = S1730, fill = "red", color = "red") +
-  geom_sf(data = S1750, fill = "red", color = "red") +
-  geom_sf(data = S1820, fill = "red", color = "red") +
+  geom_sf(data = low, fill = "lightblue", color = "lightblue") +
+  geom_sf(data = high, fill = "red", color = "red") +
   theme_classic() +
-  labs(title = "All Streets Colored By MTFCC")
-
+  labs(title = "Colored by Functional Category")
 
 # now I want to save streets_inside as a spatial object, to pull into my ctmm analysis
-# st_write(streets_inside, "data/Roadmap_Wrangled/roadmap.shp")
+st_write(high, "data/Major_Roads/major.shp")
+st_write(low, "data/Minor_Roads/minor.shp")
+st_write(all_streets, "data/All_Roads/roads.shp")
 

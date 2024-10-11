@@ -25,7 +25,7 @@ if [ -f results/results_non_rr.csv ]; then
 echo "Results file already exists! continuing..."
 else
   echo "Creating results file results_non_rr.csv"
-echo "name, numb_real_crossings, numb_simulated_crossings, numb_crossings_near_structure" > results/results_non_rr.csv
+echo "name, days, real_crossings_maj, crossings_near_structure_maj, real_crossings_min, crossings_near_structure_min, simulated_crossings_maj, sim_crossings_near_structure_maj, simulated_crossings_min, sim_crossings_near_structure_min" > results/results_non_rr.csv
 fi
 
 # Run the R script with the specified input from the array
