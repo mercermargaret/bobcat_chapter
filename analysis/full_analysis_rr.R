@@ -277,7 +277,7 @@ sim_results <- data.frame("ID" = unlist(lapply(x, function (x) x[1])),
                           "Road_Crossings_Min" = unlist(lapply(x, function (x) x[5])),
                           "Average_Distance_From_Crossing_Structure_Min" = unlist(lapply(x, function (x) x[6])),
                           "Numb_Crossings_Near_Structure_Min" = unlist(lapply(x, function (x) x[7])))
-sim_results
+# sim_results
 simulated_crossings_maj <- mean(sim_results$Road_Crossings_Maj)
 simulated_crossings_min <- mean(sim_results$Road_Crossings_Min)
 sim_crossings_near_structure_maj <- mean(sim_results$Numb_Crossings_Near_Structure_Maj)
