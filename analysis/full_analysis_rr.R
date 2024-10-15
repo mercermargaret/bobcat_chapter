@@ -22,10 +22,10 @@ print(ind_file)
 load(ind_file)
 
 t(paste0("Data loaded at ", Sys.time()))
-
+# 
 # # test driving smaller subset of data
-# load("results/Model_Fit_Results/Ben_rr.Rda")
-# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/ben.csv")
+# load("results/Model_Fit_Results/Bunny_rr.Rda")
+# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/bunny.csv")
 # individual_gps <- individual_gps[1:50,]
 # individual <- as.telemetry(individual_gps)
 # individual$identity <- individual_gps$individual.identifier
@@ -85,63 +85,61 @@ crossings_new_maj <- st_cast((crossings_multi_maj), to = "POINT")
 crossings_multi_min <- st_cast((road_crossings_min), to = "MULTIPOINT")
 crossings_new_min <- st_cast((crossings_multi_min), to = "POINT")
 
+# load bridges data
+bridges <- st_read("data/Bridges_As_Lines")
+t(paste0("Bridge data loaded at ", Sys.time()))
+# convert to get distance in m
+bridges_utc <- st_transform(bridges, crs = 32633)
 
-# get number of crossings for major roads
+# crossing structures maj  ####
+
+# get number crossings major roads
 real_crossings_maj <- length(crossings_new_maj$geometry)
 real_crossings_maj
 
-# transform road crossings to sp
-road_crossings_sp <- as(crossings_new_maj, "Spatial")
-# Find times it crossed roads
-cross_times_maj <- vector()
-for(i in 1:nrow(road_crossings_sp@coords)){
-  # Find which point in the path is closest to the crossing location
-  dists <- geosphere::distHaversine(road_crossings_sp@coords[i,], path@coords)
-  cross_times_maj[i] <- path@data[which(dists == min(dists)),"timestamp"]
-} # takes about an hour to run
+if(real_crossings_maj == 0) {
+  
+  crossings_near_structure_maj <- NA
+  paste0("No major road crossings")
+  
+} else {
+  
+  # transform road crossings to sp
+  road_crossings_sp <- as(crossings_new_maj, "Spatial")
+  # Find times it crossed roads
+  cross_times_maj <- vector()
+  for(i in 1:nrow(road_crossings_sp@coords)){
+    # Find which point in the path is closest to the crossing location
+    dists <- geosphere::distHaversine(road_crossings_sp@coords[i,], path@coords)
+    cross_times_maj[i] <- path@data[which(dists == min(dists)),"timestamp"]
+  } # takes about an hour to run
+  
+  head(cross_times_maj)
 
-head(cross_times_maj)
+  # Measuring distance of crossings from passages
+  # Empty vector to store results
+  crossings_utc_maj <- st_transform(crossings_new_maj, crs = 32633)
+  pass_dists_maj <- vector("numeric", length = length(crossings_utc_maj$OBJECTID))
+  for(i in 1:length(pass_dists_maj)){
+    crossing_point <- crossings_utc_maj[i, ]
+    # Find which point in the path is closest to the crossing location
+    dists <- st_distance(crossing_point, bridges_utc)
+    pass_dists_maj[i] <- min(dists)
+  }
+  
+  head(pass_dists_maj)
+  
+  t(paste0("Pass distances maj generated at ", Sys.time()))
+  
+  # Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
+  crossings_near_structure_maj <- length(which(pass_dists_maj <= 7))
+  
+  # merge crossings_new, cross_times, and pass_dists into one dataframe
+  crossing_info_maj <- as.data.frame(crossings_new_maj)
+  crossing_info_maj$Cross_Times <- cross_times_maj
+  crossing_info_maj$Passage_Distances <- pass_dists_maj
 
-# crossing structures maj  ####
-bridges <- st_read("data/Bridges_As_Lines")
-t(paste0("Bridge data loaded at ", Sys.time()))
-
-# Measuring distance of crossings from passages
-# convert to get distance in m
-crossings_utc_maj <- st_transform(crossings_new_maj, crs = 32633)
-bridges_utc <- st_transform(bridges, crs = 32633)
-# Empty vector to store results
-pass_dists_maj <- vector("numeric", length = length(crossings_utc_maj$OBJECTID))
-for(i in 1:length(pass_dists_maj)){
-  crossing_point <- crossings_utc_maj[i, ]
-  # Find which point in the path is closest to the crossing location
-  dists <- st_distance(crossing_point, bridges_utc)
-  pass_dists_maj[i] <- min(dists)
 }
-
-head(pass_dists_maj)
-
-t(paste0("Pass distances maj generated at ", Sys.time()))
-
-# Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
-crossings_near_structure_maj <- length(which(pass_dists_maj <= 7))
-
-# merge crossings_new, cross_times, and pass_dists into one dataframe
-crossing_info_maj <- as.data.frame(crossings_new_maj)
-crossing_info_maj$Cross_Times <- cross_times_maj
-crossing_info_maj$Passage_Distances <- pass_dists_maj
-
-# transform road crossings to sp
-road_crossings_sp <- as(crossings_new_min, "Spatial")
-# Find times it crossed roads
-cross_times_min <- vector()
-for(i in 1:nrow(road_crossings_sp@coords)){
-  # Find which point in the path is closest to the crossing location
-  dists <- geosphere::distHaversine(road_crossings_sp@coords[i,], path@coords)
-  cross_times_min[i] <- path@data[which(dists == min(dists)),"timestamp"]
-} # takes about an hour to run
-
-# head(cross_times)
 
 # crossing structures min  ####
 
@@ -149,28 +147,49 @@ for(i in 1:nrow(road_crossings_sp@coords)){
 real_crossings_min <- length(crossings_new_min$geometry)
 real_crossings_min
 
-# Measuring distance of crossings from passages
-# Empty vector to store results
-crossings_utc_min <- st_transform(crossings_new_min, crs = 32633)
-pass_dists_min <- vector("numeric", length = length(crossings_utc_min$OBJECTID))
-for(i in 1:length(pass_dists_min)){
-  crossing_point <- crossings_utc_min[i, ]
-  # Find which point in the path is closest to the crossing location
-  dists <- st_distance(crossing_point, bridges_utc)
-  pass_dists_min[i] <- min(dists)
+if(real_crossings_min == 0) {
+  
+  crossings_near_structure_min <- NA
+  paste0("No minor road crossings")
+  
+} else {
+  
+  # transform road crossings to sp
+  road_crossings_sp <- as(crossings_new_min, "Spatial")
+  # Find times it crossed roads
+  cross_times_min <- vector()
+  for(i in 1:nrow(road_crossings_sp@coords)){
+    # Find which point in the path is closest to the crossing location
+    dists <- geosphere::distHaversine(road_crossings_sp@coords[i,], path@coords)
+    cross_times_min[i] <- path@data[which(dists == min(dists)),"timestamp"]
+  } # takes about an hour to run
+  
+  head(cross_times_min)
+  
+  # Measuring distance of crossings from passages
+  # Empty vector to store results
+  crossings_utc_min <- st_transform(crossings_new_min, crs = 32633)
+  pass_dists_min <- vector("numeric", length = length(crossings_utc_min$OBJECTID))
+  for(i in 1:length(pass_dists_min)){
+    crossing_point <- crossings_utc_min[i, ]
+    # Find which point in the path is closest to the crossing location
+    dists <- st_distance(crossing_point, bridges_utc)
+    pass_dists_min[i] <- min(dists)
+  }
+  
+  head(pass_dists_min)
+  
+  t(paste0("Pass distances min generated at ", Sys.time()))
+  
+  # Which crossings were within 7m of a road passage
+  crossings_near_structure_min <- length(which(pass_dists_min <= 7))
+  
+  # merge crossings_new, cross_times, and pass_dists into one dataframe
+  crossing_info_min <- as.data.frame(crossings_new_min)
+  crossing_info_min$Cross_Times <- cross_times_min
+  crossing_info_min$Passage_Distances <- pass_dists_min
+
 }
-
-head(pass_dists_min)
-
-t(paste0("Pass distances min generated at ", Sys.time()))
-
-# Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
-crossings_near_structure_min <- length(which(pass_dists_min <= 7))
-
-# merge crossings_new, cross_times, and pass_dists into one dataframe
-crossing_info_min <- as.data.frame(crossings_new_min)
-crossing_info_min$Cross_Times <- cross_times_min
-crossing_info_min$Passage_Distances <- pass_dists_min
 
 # see how number of crossings and distance to crossing structures differs in simulations ####
 # Set up the paralellisation
@@ -404,10 +423,22 @@ write.csv(sim_results,
           file = paste0("results/Simulation_Results/", name, "_sim_cross.csv"))
 
 # save crossing info dataframes
+
+if(real_crossings_maj == 0) {
+  paste0("No major road crossings; skipped writing crossing info csv")
+  
+} else {
 write.csv(crossing_info_maj,
           file = paste0("results/Crossing_Info_Major_Roads/", name, "_crossing_info_maj.csv"))
+}
+
+if(real_crossings_min == 0) {
+  paste0("No minor road crossings; skipped writing crossing info csv")
+  
+} else {
 write.csv(crossing_info_min,
           file = paste0("results/Crossing_Info_Minor_Roads/", name, "_crossing_info_min.csv"))
+}
 
 
 write.csv(results_dist_and_speed,
