@@ -7,6 +7,14 @@
 library(ctmm)
 library(tidyverse)
 library(data.table)
+library(proj4)
+library(foreach)
+library(doParallel)
+library(sf)
+library(raster)
+library(adehabitatHR)
+library(geosphere)
+
 
 individual_gps <- read.csv("data/Bobcat_Individuals/wyatt.csv")
 
