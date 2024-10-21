@@ -26,7 +26,7 @@ else
 fi
 
 # Run the R script with the specified input from the array
-Rscript analysis/full_analysis_rr.R "${list[SLURM_ARRAY_TASK_ID]}"
+Rscript analysis/Wyatt.R "${list[SLURM_ARRAY_TASK_ID]}"
 
 # Print completion message and date
 echo "Script complete"
