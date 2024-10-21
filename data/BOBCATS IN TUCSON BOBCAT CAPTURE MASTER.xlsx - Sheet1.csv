@@ -1,0 +1,64 @@
+BOBCAT_ID,NAME,CAPTURE_DATE,INITIAL_OR_RECAPTURE,CAPTURE_LOCATION_GENERAL,CAPTURE_LOCATION_LAT,CAPTURE_LOCATION_LONG,SEX,AGE_ESTIMATE_YEARS,REPRODUCTIVE_CONDITION,ESTIMATED_WEIGHT_LB,ACTUAL_WEIGHT_LB,COLLARED,BLOOD,DNA_SWAB,FECAL,HAIR,ECTOPARASITES,NOTES,RADIO_FREQUENCY,COLLAR_ID,DATE_COLLAR_REMOVED,REASON_FOR_COLLAR_REMOVAL,MORTALITY_DATE,MORTALITY_LOCATION,MORTALITY_LAT,MORTALITY_LONG,CAUSE_OF_DEATH,RODENTICIDE_SAMPLING,NOTES
+1,Shannan,11/17/2020,Initial,Via Roma - Gate's Pass,32.236164,-111.071732,F,1.5,NL,16,12.68,Y,Y,N,Y,Y,N,,151.34,719988A,5/14/2022,breakaway,,,,,,,
+2,Morgan,11/17/2020,Initial,Int. Wildlife Museum,32.235922,-111.067151,F,3 TO 5,ET,16,13.6,Y,Y,N,N,y,N,,151.35,719989A,1/11/2021,Collar changed,,,,,,,
+2,Morgan,1/11/2022,Recapture,C. Sullivan house on Mountainside w. of Anklam,32.231079,-111.052836,F,>5,ET,18,14.58,Y,Y,Y,Y,Y,N,"Very good condition. Upper left canine black at gum ""dead"" Significant tooth wear ",151.47,725538A,6/3/2023,breakaway,,,,,,,
+3,Hal,11/19/2020,Initial,Feliz Paseo Park,32.239852,-111.059527,M,3 TO 5,TD,16,17.18,Y,Y,N,N,Y,Y,FLEAS IN EARS - NOT COLLECTED,151.32,719986B,9/16/2021,Mortality,9/13/2021,Ironwood Hills Road,32.250013,-111.054704,Likely vehicle strike,,Severely fractured left femur.  Appeared to have taken  blow to his left temple. Skull was not broken.  Carcass had been scavenged and drug around. Skull retained
+4,Dave,11/20/2020,Initial,Starr Pass Golf Course,32.213513,-111.042249,M,2 T0 3,TD,22,19.82,Y,,N,N,Y,N,,151.31,719985B,1/29/2021,Mortality,1/28/2021,Grande Avenue and Paloma,32.2184,-110.989126,Likely shot because of catching chickens,,Collar retrieved from trash can at Grande Avenue and Paloma.  Likely shot by resident with chickens loose on property and non bobcat proof fences at Anecdotally neighbors reported threats of shooting dogs if they caught chickens
+4,Dave,12/6/2020,Recapture,Culvert on Starr Pass BLVd,32.213703,-111.052114,,,,,,,,,,,,,,,,,,,,,,,
+5,NA,12/3/2020,Initial,End of Camino del Desierto,32.247042,-111.07983,m,1.5,PD,16,9.9,N,Y,N,N,Y,N,,,,,,,,,,,,
+6,NA, 12/03/2020,Initial,Starr Pass Golf Course,32.210652,-111.046442,U,yoy Kitten,,,,n,N,Y,Y,N,N,Killed on Starr Pass Blvd by vehicle strike 12/31/2020?  Carcass collected,,,,,1/2/2021,Starr Pass Boulevard,32.20673,-111.03915,Vehicle strike,Y,Mesentary fat.  Blow to the left side of the head. Chest wound.  7.18 pounds carcass weight
+7,NA,12/4/2020,Initial,Starr Pass Golf Course,32.210652,-111.046442,U,yoy Kitten,,,,n,N,N,N,N,N,,,,,,,,,,,,
+8,Ben,12/8/2020,Initial,Sweetwater Wash,32.270272,-111,M,2 to 3,,21,,y,?,Y,Y,Y,N,,151.33,719987A,6/4/2022,ScheduledBreakaway,,,,,,,
+9,Cooper,12/9/2020,Initial,Camp Cooper,32.2407,-111.07996,M,2 to 3,,25,21,y,Y,N,?,Y,N,,151.38,719992B,,Mortality,12/18/2020,Trail's End?,Unknown,Unknown,Vehicle strike?,,"An email from ""brokenheartedin tucson.com""  stated that the person accidentally hit and killed BC Cooper on Trail's End. No carcass retrieved. Collar was in Feliz Paseo Park. Email was shut down"
+10,NA,12/10/2020,Initial,Sweetwater Wash,32.269881,-111.084213,M,adult,,,,n,N,Y,,,,,,,,,,,,,,,
+11,Minnie,12/13/2020,Initial,Starr Pass Golf Course,32.213703,-111.052114,F,1.5,NL,18,11.6,Y,Y,Y,Y,Y,N,,151.37,719991B,,Mortality,10/11/2021,Starr Pass Boulevard,32.206764,-111.038785,Vehicle Strike,Y,13.14 POUNDS CARCASS WEIGHT. Good condition. Left hind femur compound fracture. Stomach broke open. Stomach was full of large bird (quail) parts. Large amount of blood in the chest cavity
+12,Margaret,12/16/2020,Initial,Greasewood/Tumamoc,32.16016,-111.018141,F,3 TO 5,ET,18,13.9,Y,Y,N,N,Y,Y,"Flea in ear collected, sent to L. Hughes for ID and DNA",151.36,719990A,11/30/2021,Recaptured and changed collar,,,,,,,
+12,Margaret,11/30/2021,Recapture,Greasewood/Tumamoc,32.216549,-111.019202,,3 to 5,ET,18,16.4,Y,y,y,n,y,,,151.46,725536A,6/7/2023,breakaway,,,,,,,
+13,Catherine,12/17/2020,Initial,Small wash off Sweetwater,32.267467,-111.080467,F,2 plus,ET,18,13.44,y,N,N,Y,N,n,,151.39,719993A,1/13/2021,Mortality,1/12/2021,South of Sweetwater on Six Bar Spur Road,32.266846,-111.07232,Human,,"Head had been cut off, collar placed around neck, buried and hid under saguaro skeleton "
+14,Bunny,2/9/2021,Initial,west of Sweetwater Preserve,32.2688166,-111.111111,F,2 plus,ET,18,,y,Y,Y,N,Y,Y,,151.39,719993A,6/21/2022,Scheduled Breakaway,,,,,,,
+15,Sweetwater,2/11/2021,Initial,Sweetwater Wash,32.270272,-111.083181,m,2 to 3,TD,16,16.6,Y,Y,Y,Y,Y,Y,,151.38,719992B,5/21/2022,Scheduled Breakaway,,,,,,,
+16,Jack,2/12/2021,Initial,Anklam Wash,32.225324,-111.037561,m,2 to 3,TD,20,19.9,y,n,y,y,y,Y,,151.31,719985B,11/5/2022,Scheduled Breakaway,,Tucson Mountain Park,32.212969,-111.72832,,,
+17,Jonathan,11/8/2021,Initial,Bill Martin,32.2136,-111.037,M,2 to 3,td,18,15.24,y,y,y,y,y,Y,,151.4,725541A,10/10/2022,Mortality,10/10/2022,At residence near Shannon and Starr Pass Bvd.,,,Human - Shot by homeowner because he was stalking chickens loose in the yard,,Good condition - weight 18.7 pounds. Good mesentary fat. Stomach full of rodents
+18,Val,11/13/2021,Initial,Greenhill's house Claussen Circle,32.21738,-110.994012,m,3 to 4,Td,16,19.6,Y,Y,Y,N,Y,Y,,151.41,725542A,6/4/2023,breakaway,,,,,,,
+19,D2,11/19/2021,Initial,Calle Morado,32.214235,-111.025882,M,2 to 3,TD,22,18.4,Y,y,y,y,y,n,,151.42,725543A,11/22/2021,Mortality,11/20/2022,Greasewood and Calle Morego,32.244121,-111.016561,Unknown- capture related? ,,Handling and release normal. Necropsy showed no signs of trauma. Perhaps excess blood in pericardium
+20,Elsie,11/19/2021,Initial,Greasewood/Tumamoc,32.213985,-111.007632,F,1.5,NL,15,13.5,Y,Y,Y,Y,Y,N,,151.44,725534A,6/1/2023,,,,,,,,
+21,Steve,11/20/20/2021,Initial,TMP west 36th Street #1,32.193447,-111.02177,m,2 to 3,TD,20,,y,Y,Y,Y,Y,N,,151.43,725233A,11/4/2022,Mortality,11/3/2022,44th Street and La Cholla,32.185405,-111.72832,Human - Collar cut off and left by side of road. No carcass retrieved,,
+22,NA,12/1/2021,Initial,TMP west 36th Street #2,32.193233,-111.022056,m,,,17.6,,n,N,,,,,,,,,,,,,,,,
+23,NA,1/11/2022,Initial,Internationl Wildlife Museum Set # 1,32.235922,-111.067151,M, less than 1,TD,18,9.9,n,Y,Y,Y,Y,N,,,,,,,,,,,,
+24,Sadie,1/11/2022,Initial,Roni;s house El Morago south of Ironwood Hills,32.248075,-111.048163,F,3 to 5,ET,18,14.58,Y,N,Y,Y,Y,N,Worm in poop,151.45,725535A,9/29/2022,Mortality,9/28/2022,Las Orroyos de Oeste subdivision,32.22147,-111.013,Shot illegally,Y,Right side entry wound with exit through left shoulder and leg. Also clipped a lung. See necropsy notes for details
+25,na,1/11/2022,Initial,C. Sullivan house on Mountainside w. of Anklam,32.231079,-111.052836,u,yoy Kitten,,,,n,N,,,,,,,,,,,,,,,,
+26,na,1/11/2022,Initial,Via Roma - Gate's Pass,32.236213,-111.071511,U,yoy Kitten,,,,n,N,,,,,,,,,,,,,,,,
+27,Wyatt,1/12/2022,Initial,Karen Dotson's ,32.26222164,-111.0465297,m,>5,TD,25,25.2,Y,y,y,n,y,n,,151.48,725539A,6/2/2023,Breakaway,,,,,,,
+27,Teddy,12/4/2023,Recapture,Jennifer Turners house,32.255842,-111.048373,m,5+,td,24,24.98,y,y,y,y,y,n,,151.32,719986c,5/3/2024,Breakaway,,,,,,,
+28,Avery,1/14/2022,Initial,Kerry's old house,32.287843,-111.061299,F,3 TO 5,ET,20,23.2,Y,Y,Y,Y,Y,N,,151.42,725543A,6/3/2023,Breakaway,,,,,,,
+29,Sylvia,1/16/2022,Initial,Judy Constantine's 5061 del desierto,32.243519,-111.072696,F,1.5,NL,13,11.4,Y,y,y,y,y,n,,151.49,725540A,6/2/2023,Breakaway,,,,,,,
+30,Lisa,1/17/2021,Initial,Cathrines site south of Sweetwater Preserve,32.267467,-111.080467,F,2 TO 3,NL,15,14.4,Y,Y,y,y,y,n,,151.37,719991B,6/2/2023,Breakaway,,,,,,,
+31,Noah,1/19/2021,Initial,Trail's End Kristin,32.243816,-111.06689,M,1.5,TD,15,15.4,N,Y,Y,Y,Y,n,,,,,,,,,,,,
+32,NA,1/21/2022,Initial,End of Camino del Desierto,32.246497,-111.07899,M,,,> 20,,n,N,Y,Y,N,,,,,,,,,,,,,
+33,NA,1/22/2022,Initial,Internationl Wildlife Museum Set # 2,32.236107,-111.066641,U,,,10,10.1,n,N,Y,n,n,,,,,,,,,,,,,
+34,Danielle,1/23/2022,Initial,"3830 West Corte Castellon, Karen Dotson's house",32.26222164,-111.0465297,F,2 TO 3,NL,16,12.4,Y,Y,Y,Y,Y,N,,151.32,719986B,11/18/2022,Changed,,,,,,,BC Hal's old collar
+34,Danielle,11/18/2022,Re-capture,Jennifer Turners house,32.256064,-111.047637,F,,P,16,13.3,y,y,y,y,y,n,,151.38,71992C,1/24/2024,Breakaway,,,,,,,
+35,NA,1/23/2022,Initial,Mary Nichols Wash,32.247693,-111.065018,U,,,,,n,N,,N,,,,,,,,,,,,,,Mass nsed spleen/liver could be kitten
+36,NA,3/11/2022,Initial,Kristen and Shannan,32.243816,-111.06689,m,Adult,,,,no,n,N,N,Y,,Released without handling,,,,,,,,,,,
+37,BobbiJo,3/11/2022,Initial,Kathy Mclean,32.2237055,-111.0357416,f,Adult,NL,18,,YES,Y,Y,N,Y,,,151.35,719989B,6/1/2023,Breakaway,,,,,,,
+38,NA,3/13/2022,Initial,,32.246486,-111.0788,m,Adult,TD,16,16.2,no,N,y,y,y,,Released without handling,,,,,,,,,,,
+39,na,3/15/2022,Initial,Jerry Rowlette's house,32.1456,-111.0594,m,Adult,,,,no,n,y,n,y,,Released without handling,,,,,,,,,,,
+40,Braeden,3/18/2022,Initial,Via Roma - Gate's Pass,32.23626,-111.071494,m,3 TO 5,td,20,?,yes,Y,Y,Y,?,,,151.36,719990B,1/19/2023,Changed,,,,,,,
+40,Braeden,1/19/2023,Re-capture,Wash @ Fe and Nancy's,32.2533,-111.0187,m,3 to 5,td,25,27.15,yes,yes,yes,yes,yes,no,,151.4,725541B,3/8/2023,Collar malfunction,,,,,,,
+41,n,11/9/2022,Initial,Doris Evans,32.2814416,-111.0723861,u,b,,,,no,n,n,n,n,,Released without handling,,,2/4/2024,Breakaway,,,,,,,
+42,Beverly,11/9/2022,Initial,Roni's,32.24774,-111.047811,f,adult,nl,16,16,yes,y,y,y,y,n,"COVID tested, had kittens this year",150.54,732957A,1/24/2024,Breakaway,,,,,,,
+43,Cynthia,11/11/2022,Initial,Jennifer Turners house,32.255804,-111.048413,f, 3 To 5,nl,16,15.72,yes,y ?,y,N,y,n,"COVID tested, had kittens this year",151.39,733054A,,,,,,,,,
+44,Luna,11/12/2022,Initial,Lucy Sampogna's house,32.306819,-111.064728,f,3,L,15,14.28,yes,y ?,y,N,y,n,"COVID tested, had kittens this year. Upper right canine missing.. Lower right canine very crooked",150.5,732955A,3/7/2024,Breakaway,,,,,,,
+45,EmmaClaire,11/12/2022,Initail,Fe and Nancy;s office,32.253709,-111.01681,f,1 plus,nl,14,9.44,yes,y ?,y,N,y,n,COVID tested,150.58,733019A,12/11/2023,Recapture,,,,,,,
+45,EmmaClaire,12/11/2023,Re-capture,Pam Parrish residence,32.256003,-111.028728,f,2 plus,nl,15,13.94,yes,n,n,y,n,n,,151.31,719985c,,Mortality,2/11/2024,Goret Road,32.260139,-111.02963,Unknown,,
+46,Cassidy,11/15/2022,Initial,SC River south of El Cerro,32.292102,-111.037803,f,5 plus,nl,18,14.9,yes,y,y,y,y,n,Covid tested,151.33,719987B,12/19/2022,Mortality,12/19/2022,,32.280998,-111.025097,Vehicle strike?,,
+47,NA,11/18/2022,Initial,SC River south of El Cerro,32.293332,-111.038039,m,8 months,ND,12,8.44,no,y,y,N,y,n,COVID tested,,,,,,,,,,,
+48,Tippy,11/21/2022,Initial,John O' Hanlon's,32.285523,-111.051808,m,1 plus,TD (one small,16,13.3,yes,y,y,y,y,n,COVID tested,150.56,733018A,6/29/2023,Breakaway,,,,,,,
+49,James,11/21/2022,Initial,John O' Hanlon's,32.285523,-111.051808,m,1 plus,ND,17,12.75,no,y,y,y,y,n,"COVID tested, captured with 48.",,,,,,,,,,,
+50,Daphne,1/21/2023,Initial,Wildcat Pass -Starr Pass,32.197544,-111.0374,f,3,NL,15,,yes,y,y,y,y,n,COVID TESTED,151.33,719987B,1/24/2024,Breakaway,,,,,,,Very lightly drugged - no weight
+51,Carrie,1/23/2021,Initial,Fe and Nancy;s office,32.254514,-110.017951,f,3 to 5,NL,18,,yes,y,Y,N,n,n,,151.45,725535B,1/23/2024,Breakaway,,,,,,,Roused from the drug. No weight or buccal swab
+52,Michele,1/28/2023,Initial,SC River north of Sunset,32.308547,-111.051502,f,3,nl,18,17.2,yes,y,y ?,,y,n,COVID Tested,151.34,719988B,,Roadkill,2/28/2023,Silverbell road near PACC,32.275957,-111.030368,,,Definitely raised fall kittens
+53,Rocky,1/28/2023,Initial,Agua Dulce - Charlie Schulz,32.272753,-111.059857,m,3 to 5,td ,25,23.14,yes,y,y,y,y,n,COVID tested,150.52,732956A,3/17/2024,Breakaway,,,,,,,
+55,Charlie,12/5/2023,Initial,SC River north of Sunset,32.319277,-111.061183,m,3 to 4,td,16,19.32,yes,y,y,y,n,n,,151.4,734073a,5/3/2024,Breakaway,,,,,,,
+56,Nala,12/7/2023,Initial,SC River north of Sunset,32.319084,-111.061,f,3 to 5,bt,15,15.6,yes,y,y,y,n,n,,151.34,719988b,1/31/2024,Breakaway,,,,,,,
+57,Karen,12/8/2023,Initial,SC River north of Sunset,32.319163,-111.0616,f,2-Jan,nl,15,11.6,yes,y,y,y,n,n,,150.6,736277,,collar deployed breakaway in malfunction,12/11/2023,Santa Cruz River north,32.312466,-111.054117,,,
