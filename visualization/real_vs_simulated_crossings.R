@@ -2,128 +2,206 @@
 # margaret mercer
 # Oct 16, 2024
 
-library(ggtext)
-library(colorspace)
-library(ragg)
+library(ggplot2)
+library(gridExtra)
+library(grid)
 
-# cartoons
-# url <- "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/man/figures/lter_penguins.png"
-# img <- magick::image_read((url))
-# pic <- grid::rasterGrob(img, interpolate = TRUE)
+
+# clear workspace
+rm(list=ls())
+
 
 # load results
 results <- read.csv("results/results.csv")
 
 # density plots ####
 
-results$line_color <- ifelse(results$diff_all > 0, "red", "green")
-
-real <- results$real_crossings_all
-simulated <- results$simulated_crossings_all
+# results$line_color <- ifelse(results$real_crossings_vs_simulated == "higher", "red", 
+#                              ifelse(results$real_crossings_vs_simulated == "lower", "green",
+#                              "gray"))
 
 long <- results %>%
   pivot_longer(cols = c(real_crossings_all, simulated_crossings_all), 
                names_to = "type", 
                values_to = "value")
 
-ggplot(long, aes(x = type, y = value)) + 
+all <- ggplot(long, aes(x = type, y = value, fill = type)) +
   ggdist::stat_halfeye(
-    adjust = .5, 
-    width = .6, 
-    .width = 0, 
-    justification = -.3, 
-    point_colour = NA) + 
-  geom_boxplot(
-    width = .25, 
-    outlier.shape = NA
-  ) +
-  geom_point(
-    size = 1.5,
-    alpha = .2,
-    position = position_jitter(
-      seed = 1, width = .1
-    )
-  ) + 
-  coord_cartesian(xlim = c(1.2, 2.9), clip = "off") +
-  coord_flip()
-# it would be good if I could get the violin to go out to the left rather than right
-
-
-ggplot(long, aes(x = type, y = value)) + 
+    adjust = 0.5,
+    trim = FALSE,
+    width = .6,
+    .width = 0,
+    justification = -.3,
+    point_colour = NA) +
   geom_boxplot(
     width = .25,
     outlier.shape = NA
   ) +
   geom_point(
     size = 1.5,
-    alpha = .2,
-    position = position_jitter(seed = 1, width = .1)
-  ) + 
-  geom_line(aes(group = name, color = line_color), alpha = .5, lwd = 1) +
-  coord_cartesian(xlim = c(1.2, 2.9), clip = "off") + 
-  labs(title = "Paired Crossings by Type", x = "Type", y = "Value") +
-  scale_color_identity()
+    alpha = .75,
+    position = position_jitter(
+      seed = 1, width = .1
+    )
+  ) +
+  coord_cartesian(xlim = c(1.4, 2.2), clip = "off") +
+  labs(title = NULL,
+       y = "Number Crossings",
+       x = NULL)  +
+  labs(title = "All Roads") +
+  scale_x_discrete(labels = c("Real", "Simulated")) +
+  scale_fill_manual(values = c("real_crossings_all" = "#FF988E", "simulated_crossings_all" = "#A0B3C1")) +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 14),
+    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.text.y = element_text(size = 10),
+    legend.position = 'none'
+  )
+all
 
 
-# Create the KDE plot
-ggplot(long, aes(x = value, fill = type)) +
-  geom_density(alpha = 0.5) +  # Use alpha for transparency
-  labs(title = "Kernel Density Estimation",
-       x = "Value",
-       y = "Density") +
-  theme_minimal()
+# ggplot(long, aes(x = type, y = value)) +
+#   geom_boxplot(
+#     width = .25,
+#     outlier.shape = NA
+#   ) +
+#   geom_point(
+#     size = 1.5,
+#     alpha = .2,
+#     position = position_jitter(seed = 1, width = .1)
+#   ) +
+#   geom_line(aes(group = name, color = line_color), alpha = .5, lwd = 1) +
+#   coord_cartesian(xlim = c(1.2, 2.9), clip = "off") +
+#   labs(title = "Paired Crossings by Type", x = "Type", y = "Value") +
+#   scale_color_identity()
 
-# density plots major raods only ####
+
+# # Create the KDE plot
+# ggplot(long, aes(x = value, fill = type)) +
+#   geom_density(alpha = 0.5) +  # Use alpha for transparency
+#   labs(title = "Kernel Density Estimation",
+#        x = "Value",
+#        y = "Density") +
+#   theme_minimal()
+
+# density plots major roads only ####
 long_maj <- results %>%
   pivot_longer(cols = c(real_crossings_maj, simulated_crossings_maj), 
                names_to = "type", 
                values_to = "value")
 
-ggplot(long_maj, aes(x = type, y = value)) + 
+maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
   ggdist::stat_halfeye(
-    adjust = .5, 
-    width = .6, 
-    .width = 0, 
-    justification = -.3, 
-    point_colour = NA) + 
-  geom_boxplot(
-    width = .25, 
-    outlier.shape = NA
-  ) +
-  geom_point(
-    size = 1.5,
-    alpha = .2,
-    position = position_jitter(
-      seed = 1, width = .1
-    )
-  ) + 
-  coord_cartesian(xlim = c(1.2, 2.9), clip = "off") +
-  coord_flip()
-
-ggplot(long_maj, aes(x = type, y = value)) + 
+    adjust = 3,
+    width = .6,
+    .width = 0,
+    justification = -.3,
+    point_colour = NA,
+    ) +
   geom_boxplot(
     width = .25,
     outlier.shape = NA
   ) +
   geom_point(
     size = 1.5,
-    alpha = .2,
-    position = position_jitter(seed = 1, width = .1)
-  ) + 
-  geom_line(aes(group = name, color = line_color), alpha = .5, lwd = 1) +
-  coord_cartesian(xlim = c(1.2, 2.9), clip = "off") + 
-  labs(title = "Paired Crossings by Type", x = "Type", y = "Value") +
-  scale_color_identity()
+    alpha = .75,
+    position = position_jitter(
+      seed = 1, width = .1
+    )
+  ) +
+  coord_cartesian(xlim = c(1.4, 2.2), clip = "off") +
+  labs(title = NULL,
+       y = NULL,
+       x = NULL) +
+  labs(title = "Major Roads") +
+  scale_x_discrete(labels = c("Real", "Simulated")) +
+  scale_fill_manual(values = c("real_crossings_maj" = "#FF988E", "simulated_crossings_maj" = "#A0B3C1")) +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 14),    
+    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.text.y = element_text(size = 10),
+    legend.position = 'none'
+  )
+maj
+
+# ggplot(long_maj, aes(x = type, y = value)) + 
+#   geom_boxplot(
+#     width = .25,
+#     outlier.shape = NA
+#   ) +
+#   geom_point(
+#     size = 1.5,
+#     alpha = .2,
+#     position = position_jitter(seed = 1, width = .1)
+#   ) + 
+#   geom_line(aes(group = name, color = line_color), alpha = .5, lwd = 1) +
+#   coord_cartesian(xlim = c(1.2, 2.9), clip = "off") + 
+#   labs(title = "Paired Crossings by Type", x = "Type", y = "Value") +
+#   scale_color_identity()
 
 
-# Create the KDE plot
-ggplot(long_maj, aes(x = value, fill = type)) +
-  geom_density(alpha = 0.5) +  # Use alpha for transparency
-  labs(title = "Kernel Density Estimation",
-       x = "Value",
-       y = "Density") +
-  theme_minimal()
+# # Create the KDE plot
+# ggplot(long_maj, aes(x = value, fill = type)) +
+#   geom_density(alpha = 0.5) +  # Use alpha for transparency
+#   labs(title = "Kernel Density Estimation",
+#        x = "Value",
+#        y = "Density") +
+#   theme_minimal()
 
+
+# density plots minor roads only ####
+long_min <- results %>%
+  pivot_longer(cols = c(real_crossings_min, simulated_crossings_min), 
+               names_to = "type", 
+               values_to = "value")
+
+min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
+  ggdist::stat_halfeye(
+    adjust = 0.5,
+    width = .6,
+    trim = FALSE,
+    .width = 0,
+    justification = -.3,
+    point_colour = NA) +
+  geom_boxplot(
+    width = .25,
+    outlier.shape = NA
+  ) +
+  geom_point(
+    size = 1.5,
+    alpha = .75,
+    position = position_jitter(
+      seed = 1, width = .1
+    )
+  ) +
+  coord_cartesian(xlim = c(1.4, 2.2), clip = "off") +
+  labs(title = NULL,
+       y = NULL,
+       x = NULL)  +
+  scale_x_discrete(labels = c("Real", "Simulated")) +
+  labs(title = "Minor Roads") +
+  scale_fill_manual(values = c("real_crossings_min" = "#FF988E", "simulated_crossings_min" = "#A0B3C1")) +
+  theme(axis.text.x = element_text(face = "bold", color = "black")) +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 14),
+    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.text.y = element_text(size = 10),
+    legend.position = 'none'
+  )
+min
+
+# put density plots together ####
+
+title_grob <- textGrob("Bobcat Road Crossings Real vs Simulated", 
+                       gp = gpar(fontsize = 20, fontface = "bold"))
+
+grid.arrange(all, maj, min, ncol = 3, top = title_grob)
 
 # lollipop all ####
 # Define custom colors

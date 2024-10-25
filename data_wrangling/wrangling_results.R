@@ -59,6 +59,9 @@ bobcats <- bobcats %>%
   mutate(across(where(is.character), ~ na_if(., "?")))  %>% 
   mutate(across(where(is.character), ~ na_if(., "")))
 
+# replace "inf" with NA
+results$speed[is.infinite(results$speed)] <- NA
+
 # create bobcat_info dataframe and merge with results
 bobcat_info <- select(bobcats, SEX, NAME, ACTUAL_WEIGHT_LB)
 bobcat_info <- bobcat_info %>%
@@ -73,4 +76,4 @@ results$diff_maj <- results$real_crossings_maj - results$simulated_crossings_maj
 
 
 # print results to csv ####
-write.csv(results, "results/results.csv")
+write.csv(results, "results/results.csv", row.names = FALSE)
