@@ -24,7 +24,7 @@ load(ind_file)
 t(paste0("Data loaded at ", Sys.time()))
 # 
 # # test driving smaller subset of data
-# load("results/Model_Fit_Results/Bunny_rr.Rda")
+# load("results/Model_Fit_Results/Jack_rr.Rda")
 # individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/bunny.csv")
 # individual_gps <- individual_gps[1:50,]
 # individual <- as.telemetry(individual_gps)
@@ -46,7 +46,7 @@ t(paste0("Roads loaded at ", Sys.time()))
 # Reproject the roads to match the tracking data
 major_roads <- st_transform(major_roads, crs("epsg:4326"))
 minor_roads <- st_transform(minor_roads, crs("epsg:4326"))
-all_roads <- st_transform(minor_roads, crs("epsg:4326"))
+all_roads <- st_transform(all_roads, crs("epsg:4326"))
 
 # create and reproject home range contour
 # Extract the 95% home range contour
@@ -57,6 +57,10 @@ home_range_sf <- st_as_sf(home_range_polygon)
 
 # tranform to proper crs
 home_range <- st_transform(home_range_sf, crs("epsg:4326"))
+
+# Get roads within range
+roads_within_range_all <- st_intersection(home_range, all_roads)
+roads_within_range_maj <- st_intersection(home_range, major_roads)
 
 # estimate number of road crossings (Noonan 2021)  ####
 # Estimate the most likely path based on the fitted movement model
@@ -90,6 +94,23 @@ bridges <- st_read("data/Bridges_As_Lines")
 t(paste0("Bridge data loaded at ", Sys.time()))
 # convert to get distance in m
 bridges_utc <- st_transform(bridges, crs = 32633)
+
+# plot map of path and roads ####
+pdf(paste0("results/Individual_Path_Maps/", individual@info$identity, ".pdf"))
+
+plot(path_2, col = "NA")
+lines(major_roads, col = "#FF0000")
+lines(minor_roads, col = "darkred")
+lines(path_2, col = "#046C9A")
+coords_maj <- st_coordinates(crossings_new_maj)  # Extract coordinates for major roads
+points(coords_maj[, 1], coords_maj[, 2], col = "black", pch = 16)  # Plot the major roads
+coords_min <- st_coordinates(crossings_new_maj)  # Extract coordinates for minor roads
+points(coords_maj[, 1], coords_maj[, 2], col = "black", pch = 16)  # Plot the minor roads
+title(main = paste(individual@info$identity, "Movement Path"),
+      family = "serif",
+      font.main = 1,
+      cex.main = 0.85)
+dev.off()
 
 # crossing structures maj  ####
 
@@ -314,26 +335,6 @@ t(paste0("Speed function finished at ", Sys.time()))
 speeds <- speeds(individual, fits)
 # its in meters/second
 
-# import roads and create home range ####
-# calculate the AKDE based on the best fit model
-individual_akde <- akde(individual, fits)
-#Return the basic statistics on the HR area
-summary(individual_akde)
-
-# create and reproject home range contour
-# Extract the 95% home range contour
-home_range_polygon <- SpatialPolygonsDataFrame.UD(individual_akde)
-
-# Convert SpatialPolygonsDataFrame to an sf object
-home_range_sf <- st_as_sf(home_range_polygon)
-
-# tranform to proper crs
-home_range <- st_transform(home_range_sf, crs("epsg:4326"))
-
-# Get the areas that fall on either side of the road
-roads_within_range <- st_intersection(home_range, all_roads)
-
-
 # calculate distance of each point to nearest road (Noonan 2021) ####
 # First I need to get instantaneous speed at each point as a function of the distance from that point to the road
 # so we'll need to get out individual (as spatial) and roads, get the distances, and then get instantaneous speed from each point too
@@ -385,12 +386,19 @@ areas <- as.data.frame(summary$CI)
 area_sq_km <- areas$est
 
 # Calculate total road length in meters
-total_road_length <- st_length(roads_within_range)
-total_road_length_m <- sum(total_road_length)
-total_road_length_km <- as.numeric(total_road_length_m/1000)
-
+total_road_length_all <- st_length(roads_within_range_all)
+total_road_length_m_all <- sum(total_road_length_all)
+total_road_length_km_all <- as.numeric(total_road_length_m_all/1000)
 # Compute road density (meters of road per square meter of home range)
-road_density <- total_road_length_km / area_sq_km
+road_density_all <- total_road_length_km_all / area_sq_km_all
+
+# repeat for major roads
+# Calculate total road length in meters
+total_road_length_maj <- st_length(roads_within_range_maj)
+total_road_length_m_maj <- sum(total_road_length_maj)
+total_road_length_km_maj <- as.numeric(total_road_length_m_maj/1000)
+# Compute road density (meters of road per square meter of home range)
+road_density_maj <- total_road_length_km_maj / area_sq_km_maj
 
 t(paste0("Road density calculated at ", Sys.time()))
 
@@ -412,8 +420,10 @@ x <- data.frame(name,
                 sim_crossings_near_structure_min,
                 speed, 
                 area_sq_km, 
-                total_road_length_km, 
-                road_density)
+                total_road_length_km_all,
+                total_road_length_km_maj,
+                road_density_all,
+                road_density_maj)
 
 # Store results in data.frame
 write.table(x, 'results/results_rr.csv', append=TRUE, row.names=FALSE, col.names=FALSE, sep=',')

@@ -191,6 +191,20 @@ CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
 
+# number crossings near structure for all roads
+results$percent_crossings_near_structure_maj <- (results$crossings_near_structure_maj/results$real_crossings_maj)
+median(results$percent_crossings_near_structure_maj, na.rm = TRUE)
+mean <- mean(results$percent_crossings_near_structure_maj, na.rm = TRUE)
+mean
+min(results$percent_crossings_near_structure_maj, na.rm = TRUE)
+max(results$percent_crossings_near_structure_maj, na.rm = TRUE)
+sd(results$percent_crossings_near_structure_maj, na.rm = TRUE)
+# get CIs
+SE <- sd(results$percent_crossings_near_structure_maj, na.rm = TRUE) / sqrt(length(results$percent_crossings_near_structure_maj))
+CI <- SE * 1.96
+upper <- mean + CI
+lower <- mean - CI
+
 
 
 # number simulated crossings near structure for all roads

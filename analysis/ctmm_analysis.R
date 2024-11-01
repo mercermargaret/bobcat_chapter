@@ -23,7 +23,7 @@ library(geosphere)
 rm(list=ls())
 
 # loading in gps data as csv
-individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/margaret.csv")
+individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/nala.csv")
 
 # making bobcat a telemetry object so ctmm recognizes it
 individual <- as.telemetry(individual_gps)
