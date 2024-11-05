@@ -390,7 +390,7 @@ total_road_length_all <- st_length(roads_within_range_all)
 total_road_length_m_all <- sum(total_road_length_all)
 total_road_length_km_all <- as.numeric(total_road_length_m_all/1000)
 # Compute road density (meters of road per square meter of home range)
-road_density_all <- total_road_length_km_all / area_sq_km_all
+road_density_all <- total_road_length_km_all / area_sq_km
 
 # repeat for major roads
 # Calculate total road length in meters
@@ -398,7 +398,7 @@ total_road_length_maj <- st_length(roads_within_range_maj)
 total_road_length_m_maj <- sum(total_road_length_maj)
 total_road_length_km_maj <- as.numeric(total_road_length_m_maj/1000)
 # Compute road density (meters of road per square meter of home range)
-road_density_maj <- total_road_length_km_maj / area_sq_km_maj
+road_density_maj <- total_road_length_km_maj / area_sq_km
 
 t(paste0("Road density calculated at ", Sys.time()))
 

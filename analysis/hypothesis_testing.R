@@ -79,36 +79,6 @@ mean(simulated_min) - mean(real_min)
 (mean(simulated_min) - mean(real_min))/mean(simulated_min)
 # p of 0.1; crossed minor roads 8% less frequently than expected
 
-# load in simulations
-file_list <- list.files(path = "results/Simulation_Results", pattern = "*.csv", full.names = TRUE)
-sim_crossings <- do.call(rbind, lapply(file_list, function(file) {
-  data <- read.csv(file)
-  return(data)
-}))
-sim_crossings$Road_Crossings_All <- sim_crossings$Road_Crossings_Min + sim_crossings$Road_Crossings_Maj
-sim_crossings$Road_Crossings_Near_Structure_All <- sim_crossings$Numb_Crossings_Near_Structure_Min + sim_crossings$Numb_Crossings_Near_Structure_Maj
-sim_crossings$Average_Distance_From_Crossing_Structure_All <- ((((sim_crossings$Average_Distance_From_Crossing_Structure_Min * sim_crossings$Road_Crossings_Min)
-                                                                 + (sim_crossings$Average_Distance_From_Crossing_Structure_Maj * sim_crossings$Road_Crossings_Maj))
-                                                                / (sim_crossings$Road_Crossings_Min + sim_crossings$Road_Crossings_Maj)))
-
-# see how simulation number of crossings differ from actual crossings
-x <- vector(mode = "character", length = length(results$name))
-for (i in 1:length(results$name)) {
-  name <- results$name[i]
-  subset <- sim_crossings[sim_crossings$ID == name,]
-  sim_numb_crossings <- subset$Road_Crossings_All
-  # hist(sim_numb_crossings)
-  lower_bound <- quantile(sim_numb_crossings, 0.025)
-  upper_bound <- quantile(sim_numb_crossings, 0.975)
-  # pull out my value for that individual from the results dataframe
-  real_crossings <- results$real_crossings_all[results$name == name]
-  
-  x[i] <- ifelse(real_crossings > upper_bound, "higher",
-                 ifelse(real_crossings < lower_bound, "lower",
-                        "within"))
-}
-
-results$real_crossings_vs_simulated <- x
 
 plot(results$real_crossings_all ~ results$simulated_crossings_all, ylim = c(0,12000), xlim = c(0,12000))
 abline(0,1)
@@ -178,7 +148,6 @@ upper <- mean + CI
 lower <- mean - CI
 
 # number crossings near structure for all roads
-results$percent_crossings_near_structure_all <- (results$crossings_near_structure_all/results$real_crossings_all)
 median(results$percent_crossings_near_structure_all, na.rm = TRUE)
 mean <- mean(results$percent_crossings_near_structure_all, na.rm = TRUE)
 mean
@@ -192,7 +161,6 @@ upper <- mean + CI
 lower <- mean - CI
 
 # number crossings near structure for all roads
-results$percent_crossings_near_structure_maj <- (results$crossings_near_structure_maj/results$real_crossings_maj)
 median(results$percent_crossings_near_structure_maj, na.rm = TRUE)
 mean <- mean(results$percent_crossings_near_structure_maj, na.rm = TRUE)
 mean
@@ -205,10 +173,7 @@ CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
 
-
-
 # number simulated crossings near structure for all roads
-results$sim_percent_crossings_near_structure_all <- (results$sim_crossings_near_structure_all/results$simulated_crossings_all)
 median(results$sim_percent_crossings_near_structure_all, na.rm = TRUE)
 mean <- mean(results$sim_percent_crossings_near_structure_all, na.rm = TRUE)
 mean
@@ -221,26 +186,6 @@ CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
 
-# pull out distribution of percentages for each individual and compare the actual number to that distribution
-sim_crossings$Percent_Crossings_Near_Structure_All <- sim_crossings$Road_Crossings_Near_Structure_All/sim_crossings$Road_Crossings_All
-
-x <- vector(mode = "character", length = length(results$name))
-for (i in 1:length(results$name)) {
-  name <- results$name[i]
-  subset <- sim_crossings[sim_crossings$ID == name,]
-  sim_percent_crossing_near_structure <- subset$Percent_Crossings_Near_Structure_All
-  # hist(sim_percent_crossing_near_structure)
-  lower_bound <- quantile(sim_percent_crossing_near_structure, 0.025, na.rm = TRUE)
-  upper_bound <- quantile(sim_percent_crossing_near_structure, 0.975, na.rm = TRUE)
-  # pull out my value for that individual from the results dataframe
-  real_percent_crossing_near_structure <- results$percent_crossings_near_structure_all[results$name == name]
-  
-  x[i] <- ifelse(real_percent_crossing_near_structure >= upper_bound, "higher",
-                 ifelse(real_percent_crossing_near_structure <= lower_bound, "lower",
-                        "within"))
-}
-
-results$real_crossings_near_structure_vs_simulated <- x
 table(results$real_crossings_near_structure_vs_simulated)
 # there werent enough major road crossings to do this for major roads
 
@@ -462,6 +407,3 @@ points(log(results$speed[results$SEX == "M"]),
        pch = 19, col = "red")
 # no clear pattern
 
-# save modified results df ####
-
-write.csv(results, "results/results.csv", row.names = FALSE)
