@@ -14,7 +14,7 @@ rm(list=ls())
 data <- read.csv("data/bobcat_locs_all.csv")
 
 names_list <- unique(data$individual.local.identifier)
-name <- names_list[15]
+name <- names_list[15] # change this number, 1 through however many individuals you have
 
 # subset to one individual
 individual_gps <- data[data$individual.local.identifier == name, ]
@@ -57,6 +57,5 @@ individual_gps_new <- data.frame(
 )
 
 # now write csv
-file.exists("data/Bobcat_Individuals/wyatt.csv")
-write.csv(individual_gps, "data/Bobcat_Individuals/wyatt.csv")
+write.csv(individual_gps, "data/Bobcat_Individuals/wyatt.csv") # change the file path to your own path, and change file by individual
 
