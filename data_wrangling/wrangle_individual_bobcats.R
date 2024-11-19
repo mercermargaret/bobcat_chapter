@@ -14,7 +14,7 @@ rm(list=ls())
 data <- read.csv("data/bobcat_locs_all.csv")
 
 names_list <- unique(data$individual.local.identifier)
-name <- names_list[15]
+name <- names_list[15] # change this number, 1 through however many individuals you have
 
 # subset to one individual
 individual_gps <- data[data$individual.local.identifier == name, ]
@@ -33,7 +33,8 @@ outliers <- outlie(individual_tel)
 plot(outliers)
 
 # get rid of outliers in individual_tel
-outlier_t <- outliers$t[outliers$distance >= 6000] # don't cut outliers unless they look super crazy!
+outlier_t <- outliers$t[outliers$distance >= 6000] # change the number here so it trims outliers away
+# don't cut outliers unless they look super crazy!
 individual_tel <- individual_tel[!individual_tel$t %in% outlier_t, ]
 # replot data
 plot(individual_tel, error = 2, level.UD = 0.50)
@@ -57,5 +58,7 @@ individual_gps_new <- data.frame(
 )
 
 # now write csv
+
 write.csv(individual_gps, "data/Bobcat_Individuals/wyatt.csv")
+
 
