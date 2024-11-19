@@ -57,6 +57,5 @@ individual_gps_new <- data.frame(
 )
 
 # now write csv
-file.exists("data/Bobcat_Individuals/wyatt.csv")
 write.csv(individual_gps, "data/Bobcat_Individuals/wyatt.csv")
 

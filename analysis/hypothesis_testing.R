@@ -41,7 +41,7 @@ sqrt_real <- (sqrt(real))
 sqrt_sim <- (sqrt(simulated))
 t_sim <- t.test(sqrt_real, sqrt_sim, paired = TRUE, na.rm = TRUE)
 print(t_sim)
-# p-value = 0.01589
+# p-value = 0.09368
 
 mean(real)
 mean(simulated)
@@ -125,6 +125,19 @@ crossings_min$Individual_ID <- sub("_.*", "", crossings_min$Individual_ID)
 # lower <- mean - CI
 # hist(crossings_min$Passage_Distances)
 
+# load in simulations
+file_list <- list.files(path = "results/Simulation_Results", pattern = "*.csv", full.names = TRUE)
+sim_crossings <- do.call(rbind, lapply(file_list, function(file) {
+  data <- read.csv(file)
+  return(data)
+}))
+sim_crossings$Road_Crossings_All <- sim_crossings$Road_Crossings_Min + sim_crossings$Road_Crossings_Maj
+sim_crossings$Road_Crossings_Near_Structure_All <- sim_crossings$Numb_Crossings_Near_Structure_Min + sim_crossings$Numb_Crossings_Near_Structure_Maj
+sim_crossings$Average_Distance_From_Crossing_Structure_All <- ((((sim_crossings$Average_Distance_From_Crossing_Structure_Min * sim_crossings$Road_Crossings_Min)
+                                                                 + (sim_crossings$Average_Distance_From_Crossing_Structure_Maj * sim_crossings$Road_Crossings_Maj))
+                                                                / (sim_crossings$Road_Crossings_Min + sim_crossings$Road_Crossings_Maj)))
+
+
 # merge to get crossing info for all roads
 crossings_maj$Road_Type <- "major"
 crossings_min$Road_Type <- "minor"
@@ -160,7 +173,7 @@ CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
 
-# number crossings near structure for all roads
+# number crossings near structure for major roads
 median(results$percent_crossings_near_structure_maj, na.rm = TRUE)
 mean <- mean(results$percent_crossings_near_structure_maj, na.rm = TRUE)
 mean
@@ -188,6 +201,20 @@ lower <- mean - CI
 
 table(results$real_crossings_near_structure_vs_simulated)
 # there werent enough major road crossings to do this for major roads
+
+# exclude the two outliers and run again
+results_trimmed <- results[c(1:4, 6:18, 20:33),]
+median(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
+mean <- mean(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
+mean
+min(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
+max(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
+sd(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
+# get CIs
+SE <- sd(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE) / sqrt(length(results_trimmed$percent_crossings_near_structure_all))
+CI <- SE * 1.96
+upper <- mean + CI
+lower <- mean - CI
 
 # hypothesis 3: Does bobcat movement behavior change when they are closer to roads? ####
 # test for relationship between distance of each point from road and instantaneous speed
@@ -223,20 +250,23 @@ plot(Speed ~ log(Distance) + (log(Distance)), data = points_new)
 # use random effect for slope AND intercept (if I can) since both are likely to vary by individual
 
 # test for relationship between road density and home range size
-density <- results$road_density
+density <- results$road_density_all
 area <- results$area_sq_km
 plot(area ~ density)
 glm(area ~ density)
 summary(glm(area ~ density))
-
+# this is still "nonsignificant" for only major roads 
+# (beta: 0.9427 pvalue: 0.12)
 
 # test for relationship between road density and average speed
 results_trimmed <- subset(results, !is.na(results$speed) & speed != Inf)
-results_trimmed <- subset(results_trimmed, !is.na(results_trimmed$road_density))
+results_trimmed <- subset(results_trimmed, !is.na(results_trimmed$road_density_all))
 speed <- results_trimmed$speed
-area <- results_trimmed$area
-density <- results_trimmed$road_density
+area <- results_trimmed$area_sq_km
+density <- results_trimmed$road_density_all
 summary(glm(speed ~ density))
+# even stronger for major roads!!
+# (beta: 1.24 pvalue: 0.00048)
 
 # hm this is interesting. if speed and area covary, could have impact on analysis
 ggplot(results_trimmed, aes(x = area, y = speed)) +
@@ -245,12 +275,12 @@ ggplot(results_trimmed, aes(x = area, y = speed)) +
 
 # bobcats with highest and lowest areas
 
-mean <- mean(results_trimmed$road_density)
+mean <- mean(results_trimmed$road_density_all)
 
-high_area <- results_trimmed[results_trimmed$road_density > mean, ]
+high_area <- results_trimmed[results_trimmed$road_density_all > mean, ]
 high <- mean(high_area$speed)
 
-low_area <- results_trimmed[results_trimmed$road_density < mean, ]
+low_area <- results_trimmed[results_trimmed$road_density_all < mean, ]
 low <- mean(low_area$speed)
 
 # hist(high_area$speed)
@@ -276,25 +306,25 @@ summary(glm(crossings_per_day_maj ~ density, data = results_trimmed))
 
 # mortality ####
 # mort as function of road density
-density_mort <- (results$road_density[results$mortality == 1])
-density_no_mort <- (results$road_density[results$mortality == 0])
+density_mort <- (results$road_density_all[results$mortality == 1])
+density_no_mort <- (results$road_density_all[results$mortality == 0])
 t2_mort <- t.test(density_no_mort, density_mort, na.rm = TRUE)
 print(t2_mort)
-# no effect
+# no effect (also no effect with only major roads)
 
-glm2_mort <- glm(mortality ~ road_density, data = results, family = binomial)
+glm2_mort <- glm(mortality ~ road_density_all, data = results, family = binomial)
 summary(glm2_mort)
-# no effect
+# no effect (also no effect with only major roads)
 
 # plot density
-hist(results$road_density, 
+hist(results$road_density_all, 
      main = "Road Density with Mortality As Dots", 
      xlab = "Values", 
      ylab = "Frequency", 
      breaks = 20, 
      col = "lightgray")
 # add dots for mortalities
-points(results$road_density[results$mortality == 1], 
+points(results$road_density_all[results$mortality == 1], 
        rep(0, sum(results$mortality == 1)),  
        pch = 19, col = "red")
 # there doesn't really seem to be a pattern
@@ -347,20 +377,20 @@ points(results$crossings_per_day_all[results$SEX == "M"],
 # no strong pattern
 
 # road density as function of sex
-density_male <- (results$road_density[results$SEX == "M"])
-density_female <- (results$road_density[results$SEX == "F"])
+density_male <- (results$road_density_all[results$SEX == "M"])
+density_female <- (results$road_density_all[results$SEX == "F"])
 t3_sex <- t.test(density_male, density_female, na.rm = TRUE)
 print(t3_sex)
-# no correlation
+# no correlation, even with only major raods
 # plot density
-hist(results$road_density, 
+hist(results$road_density_all, 
      main = "Road Density with Males as Dots", 
      xlab = "Values", 
      ylab = "Frequency", 
      breaks = 20, 
      col = "lightgray")
 # add dots for males
-points(results$road_density[results$SEX == "M"], 
+points(results$road_density_all[results$SEX == "M"], 
        rep(0, sum(results$SEX == "M")),  
        pch = 19, col = "red")
 # no clear pattern

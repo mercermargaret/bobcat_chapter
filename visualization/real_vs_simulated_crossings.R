@@ -202,92 +202,92 @@ title_grob <- textGrob("Bobcat Road Crossings Real vs Simulated",
                        gp = gpar(fontsize = 20, fontface = "bold"))
 
 grid.arrange(all, maj, min, ncol = 3, top = title_grob)
-
-# lollipop all ####
-# Define custom colors
-my_colors <- c("Increase" = "#0B5401", 
-               "Slight Increase" = "#77A87C", 
-               "No Change" = "steelblue", "Slight Decrease" = "#C67976", 
-               "Decrease" = "#8B0000", 
-               "White" = "white")
-
-# Create the lollipop chart with legend title removed and custom colors
-lol <- ggplot(results, aes(x = name, y = diff_all,
-                           fill = ifelse(diff_all > 0, "Increase",
-                                         ifelse(diff_all < 0, "Decrease", "No Change")),
-                           color = ifelse(diff_all > 0, "Increase",
-                                          ifelse(diff_all < 0, "Decrease", "No Change"))
-)) +
-  geom_segment(aes(xend = name, yend = 0)) +
-  geom_point(shape = 21, size = 3) +
-  scale_y_continuous(expand = c(0, 0), 
-                     limits = c((min((results$diff_all)) - 0.15), 
-                                (max((results$diff_all)) + 0.1)),) +
-  coord_flip() +
-  theme_classic () +
-  theme(axis.title.y = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none",
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        text = element_text(family = "Helvetica", size = 15)) +
-  geom_hline(yintercept = 0, color = "darkgray") +
-  labs(x = NULL, 
-       y = "Difference Between Real and Simulated Crossings", 
-       main = "Difference Between Real and Simulated Crossings") +
-  scale_color_manual(values = my_colors) +  # Set custom colors
-  guides(fill = guide_legend(title = NULL), color = guide_legend(title = NULL)) + # Remove legend title
-  scale_fill_manual(values = my_colors) +
-  geom_text(aes(x = name, 
-                y = (min((diff_all)) - 0.14), 
-                label = name), 
-            hjust = 0, 
-            vjust = 0.5, 
-            color = "black")
-lol
-
-
-
-# lollipop major roads only ####
-# Define custom colors
-my_colors <- c("Increase" = "#0B5401", 
-               "Slight Increase" = "#77A87C", 
-               "No Change" = "steelblue", "Slight Decrease" = "#C67976", 
-               "Decrease" = "#8B0000", 
-               "White" = "white")
-
-# Create the lollipop chart with legend title removed and custom colors
-lol_maj <- ggplot(results, aes(x = name, y = diff_maj,
-                           fill = ifelse(diff_maj > 0, "Increase",
-                                         ifelse(diff_maj < 0, "Decrease", "No Change")),
-                           color = ifelse(diff_maj > 0, "Increase",
-                                          ifelse(diff_maj < 0, "Decrease", "No Change"))
-)) +
-  geom_segment(aes(xend = name, yend = 0)) +
-  geom_point(shape = 21, size = 3) +
-  scale_y_continuous(expand = c(0, 0), 
-                     limits = c((min((results$diff_maj)) - 0.15), 
-                                (max((results$diff_maj)) + 0.1)),) +
-  coord_flip() +
-  theme_classic () +
-  theme(axis.title.y = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none",
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        text = element_text(family = "Helvetica", size = 15)) +
-  geom_hline(yintercept = 0, color = "darkgray") +
-  labs(x = NULL, 
-       y = "Difference Between Real and Simulated Crossings", 
-       main = "Difference Between Real and Simulated Crossings") +
-  scale_color_manual(values = my_colors) +  # Set custom colors
-  guides(fill = guide_legend(title = NULL), color = guide_legend(title = NULL)) + # Remove legend title
-  scale_fill_manual(values = my_colors) +
-  geom_text(aes(x = name, 
-                y = (min((diff_maj)) - 0.14), 
-                label = name), 
-            hjust = 0, 
-            vjust = 0.5, 
-            color = "black")
-lol_maj
-
+# 
+# # lollipop all ####
+# # Define custom colors
+# my_colors <- c("Increase" = "#0B5401", 
+#                "Slight Increase" = "#77A87C", 
+#                "No Change" = "steelblue", "Slight Decrease" = "#C67976", 
+#                "Decrease" = "#8B0000", 
+#                "White" = "white")
+# 
+# # Create the lollipop chart with legend title removed and custom colors
+# lol <- ggplot(results, aes(x = name, y = diff_all,
+#                            fill = ifelse(diff_all > 0, "Increase",
+#                                          ifelse(diff_all < 0, "Decrease", "No Change")),
+#                            color = ifelse(diff_all > 0, "Increase",
+#                                           ifelse(diff_all < 0, "Decrease", "No Change"))
+# )) +
+#   geom_segment(aes(xend = name, yend = 0)) +
+#   geom_point(shape = 21, size = 3) +
+#   scale_y_continuous(expand = c(0, 0), 
+#                      limits = c((min((results$diff_all)) - 0.15), 
+#                                 (max((results$diff_all)) + 0.1)),) +
+#   coord_flip() +
+#   theme_classic () +
+#   theme(axis.title.y = element_blank(),
+#         panel.border = element_blank(),
+#         legend.position = "none",
+#         axis.text.y = element_blank(),
+#         axis.ticks = element_blank(),
+#         text = element_text(family = "Helvetica", size = 15)) +
+#   geom_hline(yintercept = 0, color = "darkgray") +
+#   labs(x = NULL, 
+#        y = "Difference Between Real and Simulated Crossings", 
+#        main = "Difference Between Real and Simulated Crossings") +
+#   scale_color_manual(values = my_colors) +  # Set custom colors
+#   guides(fill = guide_legend(title = NULL), color = guide_legend(title = NULL)) + # Remove legend title
+#   scale_fill_manual(values = my_colors) +
+#   geom_text(aes(x = name, 
+#                 y = (min((diff_all)) - 0.14), 
+#                 label = name), 
+#             hjust = 0, 
+#             vjust = 0.5, 
+#             color = "black")
+# lol
+# 
+# 
+# 
+# # lollipop major roads only ####
+# # Define custom colors
+# my_colors <- c("Increase" = "#0B5401", 
+#                "Slight Increase" = "#77A87C", 
+#                "No Change" = "steelblue", "Slight Decrease" = "#C67976", 
+#                "Decrease" = "#8B0000", 
+#                "White" = "white")
+# 
+# # Create the lollipop chart with legend title removed and custom colors
+# lol_maj <- ggplot(results, aes(x = name, y = diff_maj,
+#                            fill = ifelse(diff_maj > 0, "Increase",
+#                                          ifelse(diff_maj < 0, "Decrease", "No Change")),
+#                            color = ifelse(diff_maj > 0, "Increase",
+#                                           ifelse(diff_maj < 0, "Decrease", "No Change"))
+# )) +
+#   geom_segment(aes(xend = name, yend = 0)) +
+#   geom_point(shape = 21, size = 3) +
+#   scale_y_continuous(expand = c(0, 0), 
+#                      limits = c((min((results$diff_maj)) - 0.15), 
+#                                 (max((results$diff_maj)) + 0.1)),) +
+#   coord_flip() +
+#   theme_classic () +
+#   theme(axis.title.y = element_blank(),
+#         panel.border = element_blank(),
+#         legend.position = "none",
+#         axis.text.y = element_blank(),
+#         axis.ticks = element_blank(),
+#         text = element_text(family = "Helvetica", size = 15)) +
+#   geom_hline(yintercept = 0, color = "darkgray") +
+#   labs(x = NULL, 
+#        y = "Difference Between Real and Simulated Crossings", 
+#        main = "Difference Between Real and Simulated Crossings") +
+#   scale_color_manual(values = my_colors) +  # Set custom colors
+#   guides(fill = guide_legend(title = NULL), color = guide_legend(title = NULL)) + # Remove legend title
+#   scale_fill_manual(values = my_colors) +
+#   geom_text(aes(x = name, 
+#                 y = (min((diff_maj)) - 0.14), 
+#                 label = name), 
+#             hjust = 0, 
+#             vjust = 0.5, 
+#             color = "black")
+# lol_maj
+# 

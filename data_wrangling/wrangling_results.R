@@ -23,8 +23,12 @@ bobcats <- read.csv("data/BOBCATS IN TUCSON BOBCAT CAPTURE MASTER.xlsx - Sheet1.
 # add columns for non rr bobcats so you can merge
 results_non_rr$speed <- c(NA, NA)
 results_non_rr$area_sq_km <- c(NA, NA)
-results_non_rr$total_road_length_km <- c(NA, NA)
-results_non_rr$road_density <- c(NA, NA)
+results_non_rr$total_road_length_km_all <- c(NA, NA)
+results_non_rr$total_road_length_km_maj <- c(NA, NA)
+results_non_rr$road_density_all <- c(NA, NA)
+results_non_rr$road_density_maj <- c(NA, NA)
+# fix wyatt's name
+results_rr[33,1] <- "Wyatt"
 
 # merge into one dataframe
 results <- rbind(results_rr, results_non_rr)

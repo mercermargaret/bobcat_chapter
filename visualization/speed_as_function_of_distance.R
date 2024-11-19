@@ -40,7 +40,7 @@ ggplot(points_new, aes(x = bins, y = speed_mph)) +
   labs(title = "Effect of Proximity to Roads on Bobcat Speed", 
        x = "Distance to Nearest Road (m)", 
        y = "Instantaneous Speed (mph)") +
-  scale_x_discrete(labels = c("<25", "25-50", "50-100", "100-200", "200-400", "400-800", "1600-3200", "3200<")) +
+  scale_x_discrete(labels = c("<25", "25-50", "50-100", "100-200", "200-400", "400-800", "800-1600", "1600<")) +
   theme_minimal() +
   theme_classic() + 
   theme(
