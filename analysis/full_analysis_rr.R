@@ -104,8 +104,8 @@ lines(minor_roads, col = "darkred")
 lines(path_2, col = "#046C9A")
 coords_maj <- st_coordinates(crossings_new_maj)  # Extract coordinates for major roads
 points(coords_maj[, 1], coords_maj[, 2], col = "black", pch = 16)  # Plot the major roads
-coords_min <- st_coordinates(crossings_new_maj)  # Extract coordinates for minor roads
-points(coords_maj[, 1], coords_maj[, 2], col = "black", pch = 16)  # Plot the minor roads
+coords_min <- st_coordinates(crossings_new_min)  # Extract coordinates for minor roads
+points(coords_min[, 1], coords_min[, 2], col = "black", pch = 16)  # Plot the minor roads
 title(main = paste(individual@info$identity, "Movement Path"),
       family = "serif",
       font.main = 1,
