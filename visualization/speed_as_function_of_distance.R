@@ -31,15 +31,15 @@ points_new <- points %>%
 points_new$bins <- cut(points_new$Distance, breaks = c(0, 25, 50, 100, 200, 400, 800, 1600, 3200), include.lowest = TRUE)
 
 # convert speed to miles/hour
-points_new$speed_mph <- points_new$Speed * 2.23694
+points_new$speed_kmh <- points_new$Speed * 3.6
 
 # Create binned boxplots
-ggplot(points_new, aes(x = bins, y = speed_mph)) +
+ggplot(points_new, aes(x = bins, y = speed_kmh)) +
   geom_boxplot(outlier.alpha = 0.2, outlier.size = 1,
                ) +
   labs(title = "Effect of Proximity to Roads on Bobcat Speed", 
        x = "Distance to Nearest Road (m)", 
-       y = "Instantaneous Speed (mph)") +
+       y = "Instantaneous Speed (km/hr)") +
   scale_x_discrete(labels = c("<25", "25-50", "50-100", "100-200", "200-400", "400-800", "800-1600", "1600<")) +
   theme_minimal() +
   theme_classic() + 

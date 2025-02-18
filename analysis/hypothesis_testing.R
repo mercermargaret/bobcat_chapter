@@ -10,6 +10,8 @@ rm(list=ls())
 library(tidyverse)
 library(lme4)
 library(lmerTest)
+library(sjPlot)
+library(emmeans)
 
 
 # load results
@@ -21,20 +23,6 @@ real <- results$real_crossings_all
 simulated <- results$simulated_crossings_all
 hist(real)
 hist(simulated)
-
-# # wilcox test
-# wilcoxon_result <- wilcox.test(real, simulated, paired = TRUE, na.rm = TRUE)
-# print(wilcoxon_result)
-# 
-# # paired t test
-# t_result <- t.test(real, simulated, paired = TRUE, na.rm = TRUE)
-# print(t_result)
-
-# # log transform them
-# log_real <- log(real)
-# log_sim <- log(simulated)
-# t_result <- t.test(log_real, log_sim, paired = TRUE, na.rm = TRUE)
-# print(t_result)
 
 # sqrt transform
 sqrt_real <- (sqrt(real))
@@ -49,22 +37,24 @@ mean(simulated) - mean(real)
 (mean(simulated) - mean(real))/mean(simulated)
 # crossed all roads 11% less frequently than expected by chance
 
+# do linear regression where # crossings = y, 0 or 1 as x, real vs simulated 
+
+# major roads:
 real_maj <- results$real_crossings_maj
 simulated_maj <- results$simulated_crossings_maj
 hist(real_maj)
 hist(simulated_maj)
-
 sqrt_real <- (sqrt(real_maj))
 sqrt_sim <- (sqrt(simulated_maj))
 t_sim_maj <- t.test(sqrt_real, sqrt_sim, paired = TRUE, na.rm = TRUE)
 print(t_sim_maj)
-
 mean(real_maj)
 mean(simulated_maj)
 mean(simulated_maj) - mean(real_maj)
 (mean(simulated_maj) - mean(real_maj))/mean(simulated_maj)
 # crossed major roads 26% less frequently than expected
 
+# minor roads:
 real_min <- results$real_crossings_min
 simulated_min <- results$simulated_crossings_min
 hist(real_min)
@@ -253,10 +243,12 @@ plot(Speed ~ log(Distance) + (log(Distance)), data = points_new)
 density <- results$road_density_all
 area <- results$area_sq_km
 plot(area ~ density)
-glm(area ~ density)
-summary(glm(area ~ density))
+ad <- glm(area ~ density)
+summary(ad)
+tab_model(ad)
 # this is still "nonsignificant" for only major roads 
-# (beta: 0.9427 pvalue: 0.12)
+# (beta: 0.9427 pvalue: 0.12) why does this change every time x_x
+# new numbers: beta -0.01 pvalue 0.955 R = 0
 
 # test for relationship between road density and average speed
 results_trimmed <- subset(results, !is.na(results$speed) & speed != Inf)
@@ -264,9 +256,12 @@ results_trimmed <- subset(results_trimmed, !is.na(results_trimmed$road_density_a
 speed <- results_trimmed$speed
 area <- results_trimmed$area_sq_km
 density <- results_trimmed$road_density_all
-summary(glm(speed ~ density))
+sd <- glm(speed ~ density)
+summary(sd)
+tab_model(sd)
 # even stronger for major roads!!
-# (beta: 1.24 pvalue: 0.00048)
+# (beta: 1.24 pvalue: 0.00048) why does this change every time x_x
+# new numbers: beta 0.25 pvalue 0.03 R = 0.194
 
 # hm this is interesting. if speed and area covary, could have impact on analysis
 ggplot(results_trimmed, aes(x = area, y = speed)) +

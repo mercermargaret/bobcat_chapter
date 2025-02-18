@@ -25,6 +25,8 @@ long <- results %>%
                names_to = "type", 
                values_to = "value")
 
+long$type <- factor(long$type, levels = c("simulated_crossings_all", "real_crossings_all"))
+
 all <- ggplot(long, aes(x = type, y = value, fill = type)) +
   ggdist::stat_halfeye(
     adjust = 0.5,
@@ -49,7 +51,7 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
        y = "Number Crossings",
        x = NULL)  +
   labs(title = "All Roads") +
-  scale_x_discrete(labels = c("Real", "Simulated")) +
+  scale_x_discrete(labels = c("Simulated", "Real")) +
   scale_fill_manual(values = c("real_crossings_all" = "#FF988E", "simulated_crossings_all" = "#A0B3C1")) +
   theme_classic() + 
   theme(
@@ -92,6 +94,8 @@ long_maj <- results %>%
                names_to = "type", 
                values_to = "value")
 
+long_maj$type <- factor(long_maj$type, levels = c("simulated_crossings_maj", "real_crossings_maj"))
+
 maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
   ggdist::stat_halfeye(
     adjust = 3,
@@ -116,7 +120,7 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
        y = NULL,
        x = NULL) +
   labs(title = "Major Roads") +
-  scale_x_discrete(labels = c("Real", "Simulated")) +
+  scale_x_discrete(labels = c("Simulated", "Real")) +
   scale_fill_manual(values = c("real_crossings_maj" = "#FF988E", "simulated_crossings_maj" = "#A0B3C1")) +
   theme_classic() + 
   theme(
@@ -159,6 +163,8 @@ long_min <- results %>%
                names_to = "type", 
                values_to = "value")
 
+long_min$type <- factor(long_min$type, levels = c("simulated_crossings_min", "real_crossings_min"))
+
 min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
   ggdist::stat_halfeye(
     adjust = 0.5,
@@ -182,7 +188,7 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
   labs(title = NULL,
        y = NULL,
        x = NULL)  +
-  scale_x_discrete(labels = c("Real", "Simulated")) +
+  scale_x_discrete(labels = c("Simulated", "Real")) +
   labs(title = "Minor Roads") +
   scale_fill_manual(values = c("real_crossings_min" = "#FF988E", "simulated_crossings_min" = "#A0B3C1")) +
   theme(axis.text.x = element_text(face = "bold", color = "black")) +

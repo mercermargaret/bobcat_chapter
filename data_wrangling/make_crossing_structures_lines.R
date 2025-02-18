@@ -43,4 +43,4 @@ bridges_sf <- st_sf(bridges, crs = 4326)
 plot(st_geometry(bridges_sf)) # plot to be sure it worked
 
 # write shapefile
-st_write(bridges_sf, "data/Bridges_As_Lines/bridges_as_lines.shp")
+# st_write(bridges_sf, "data/Bridges_As_Lines/bridges_as_lines.shp")
