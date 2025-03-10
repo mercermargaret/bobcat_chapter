@@ -14,7 +14,7 @@ rm(list=ls())
 data <- read.csv("data/bobcat_locs_all.csv")
 
 names_list <- unique(data$individual.local.identifier)
-name <- names_list[15] # change this number, 1 through however many individuals you have
+name <- names_list[4] # change this number, 1 through however many individuals you have
 
 # subset to one individual
 individual_gps <- data[data$individual.local.identifier == name, ]

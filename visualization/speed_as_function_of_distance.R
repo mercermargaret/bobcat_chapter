@@ -35,8 +35,7 @@ points_new$speed_kmh <- points_new$Speed * 3.6
 
 # Create binned boxplots
 ggplot(points_new, aes(x = bins, y = speed_kmh)) +
-  geom_boxplot(outlier.alpha = 0.2, outlier.size = 1,
-               ) +
+  geom_boxplot(outlier.alpha = 0.2, outlier.size = 3, lwd = 2) +
   labs(title = "Effect of Proximity to Roads on Bobcat Speed", 
        x = "Distance to Nearest Road (m)", 
        y = "Instantaneous Speed (km/hr)") +
@@ -44,11 +43,11 @@ ggplot(points_new, aes(x = bins, y = speed_kmh)) +
   theme_minimal() +
   theme_classic() + 
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
-    axis.title.x = element_text(face = "bold", color = "black", size = 14),  
-    axis.text.x = element_text(size = 10),    
-    axis.title.y = element_text(size = 14, face = "bold"),
-    axis.text.y = element_text(size = 10),
+    plot.title = element_text(size = 40, face = "bold", hjust = 0.5), 
+    axis.title.x = element_text(size = 30, face = "bold"),  
+    axis.text.x = element_text(size = 25, face = "bold",),    
+    axis.title.y = element_text(size = 30, face = "bold"),
+    axis.text.y = element_text(size = 30, face = "bold"),
     legend.position = 'none'
   )
 

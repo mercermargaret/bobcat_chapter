@@ -192,7 +192,7 @@ lower <- mean - CI
 table(results$real_crossings_near_structure_vs_simulated)
 # there werent enough major road crossings to do this for major roads
 
-# exclude the two outliers and run again
+# exclude the two outliers and run again REAL
 results_trimmed <- results[c(1:4, 6:18, 20:33),]
 median(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
 mean <- mean(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
@@ -202,6 +202,20 @@ max(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
 sd(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE)
 # get CIs
 SE <- sd(results_trimmed$percent_crossings_near_structure_all, na.rm = TRUE) / sqrt(length(results_trimmed$percent_crossings_near_structure_all))
+CI <- SE * 1.96
+upper <- mean + CI
+lower <- mean - CI
+
+# exclude the two outliers and run again SIMULATED
+results_trimmed <- results[c(1:4, 6:18, 20:33),]
+median(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
+mean <- mean(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
+mean
+min(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
+max(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
+sd(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
+# get CIs
+SE <- sd(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE) / sqrt(length(results_trimmed$sim_percent_crossings_near_structure_all))
 CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI

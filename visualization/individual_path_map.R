@@ -37,8 +37,8 @@ minor_roads <- st_transform(minor_roads, crs("epsg:4326"))
 all_roads <- st_transform(all_roads, crs("epsg:4326"))
 bridges <- st_transform(bridges, crs("epsg:4326"))
 
-# select Dave
-i = 14
+# select individual
+i = 26
 
 file_path <- file.path("results/Model_Fit_Results", files[i])
 
@@ -47,6 +47,9 @@ load(file_path)
 
 # print name of individual it's on
 print(file_path)
+
+# trim to make path show up better (optional)
+individual <- individual[1:300,]
 
 # wrangle stuff  ####
 # Estimate the most likely path based on the fitted movement model
@@ -78,12 +81,18 @@ crossings_new_min <- st_cast((crossings_multi_min), to = "POINT")
 coords_maj <- st_coordinates(crossings_new_maj)  # Extract coordinates for major roads
 coords_min <- st_coordinates(crossings_new_min)  # Extract coordinates for minor roads
 
-
-
 # Get the bounding box of path_2 (extent)
-bbox <- (st_bbox(path_2))
+bbox <- st_bbox(path_2)
 
-coords <- list(c(-111.06303, 32.20235), c(-110.96250, 32.20235), c(-110.96250, 32.23172), c(-111.06303, 32.23172)) # extent of max value for real and simulated
+# Extract coordinates from bbox
+coords <- list(c(bbox["xmin"], bbox["ymin"]), 
+               c(bbox["xmax"], bbox["ymin"]), 
+               c(bbox["xmax"], bbox["ymax"]), 
+               c(bbox["xmin"], bbox["ymax"]))
+
+# Print the coordinates to verify
+print(coords)
+
 
 # Convert list to a matrix of coordinates
 coords_matrix <- matrix(unlist(coords), ncol = 2, byrow = TRUE)
@@ -129,24 +138,28 @@ ggplot() +
 
 # Create the combined plot
 ggplot() +
-  # Plot path_2 first
-  geom_sf(data = path_sf, color = "#7390EE", linewidth = 1.5, alpha = 0.6) +
+  # Plot path_2 first with legend
+  geom_sf(data = path_sf, aes(color = "Bobcat Path"), linewidth = 1, alpha = 1, show.legend = TRUE) +
   
-  geom_sf(data = minor_roads_cropped, color = "black", 
-          linewidth = 0.75, inherit.aes = FALSE) +
-
-  geom_sf(data = major_roads_cropped, color = "black", 
-          linewidth = 2, inherit.aes = FALSE, show.legend = FALSE) + 
-
+  # Plot minor roads without legend
+  geom_sf(data = minor_roads_cropped, color = "black", linewidth = 0.5, inherit.aes = FALSE) +
+  
+  # Plot major roads with legend
+  geom_sf(data = major_roads_cropped, aes(color = "Roads"), linewidth = 2, inherit.aes = FALSE, show.legend = TRUE) +
+  scale_color_manual(values = c("Bobcat Path" = "aquamarine3", "Roads" = "black")) +  # Set color for Path and Major Roads
   # Customize plot appearance
+  labs(title = "Bobcat #56 Movement Path") + 
   theme_minimal() +
   theme(
-    title = element_text("Real Path"), 
+    plot.title = element_text(size = 30, face = "bold", hjust = 0.5, vjust = 0.5),
     axis.text = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
-    legend.position = "none"
-  )
+    legend.text = element_text(size = 20)
+  ) +
+  guides(color = guide_legend(title = NULL))
+
+
 
 
 # plot path, roads, and crossings ####
@@ -213,30 +226,30 @@ ggplot() +
       panel.grid = element_blank(),
       legend.position = "none"
     )
-
-# example "crossing and structure" ####
-# Load necessary library
-library(ggplot2)
-
-# Create some data for the line and points
-line_data <- data.frame(x = c(0, 10), y = c(0, 10))  # coordinates for the line
-point_data <- data.frame(x = 5, y = 5)  # coordinates for the red point
-x_shape_data <- data.frame(x = 6, y = 6)  # coordinates for the 'X' shape
-
-# Create the plot
-ggplot() +
-  geom_line(data = line_data, aes(x = x, y = y), color = "black", size = 1) +
-  geom_point(data = point_data, aes(x = x, y = y), color = "blue", size = 3) +
-  geom_point(data = x_shape_data, aes(x = x, y = y), color = "red", shape = 4, size = 4, stroke = 3, alpha = 1, inherit.aes = FALSE) +
-  # Customize the theme
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    panel.grid = element_blank(),
-    legend.position = "none"
-  )
-
+# 
+# # example "crossing and structure" ####
+# # Load necessary library
+# library(ggplot2)
+# 
+# # Create some data for the line and points
+# line_data <- data.frame(x = c(0, 10), y = c(0, 10))  # coordinates for the line
+# point_data <- data.frame(x = 5, y = 5)  # coordinates for the red point
+# x_shape_data <- data.frame(x = 6, y = 6)  # coordinates for the 'X' shape
+# 
+# # Create the plot
+# ggplot() +
+#   geom_line(data = line_data, aes(x = x, y = y), color = "black", size = 1) +
+#   geom_point(data = point_data, aes(x = x, y = y), color = "blue", size = 3) +
+#   geom_point(data = x_shape_data, aes(x = x, y = y), color = "red", shape = 4, size = 4, stroke = 3, alpha = 1, inherit.aes = FALSE) +
+#   # Customize the theme
+#   theme_minimal() +
+#   theme(
+#     axis.text = element_blank(),
+#     axis.title = element_blank(),
+#     panel.grid = element_blank(),
+#     legend.position = "none"
+#   )
+# 
 
 
 # for loop to make plot for all individuals: ####

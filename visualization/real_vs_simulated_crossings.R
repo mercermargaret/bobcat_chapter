@@ -37,10 +37,11 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
     point_colour = NA) +
   geom_boxplot(
     width = .25,
-    outlier.shape = NA
+    outlier.shape = NA,
+    lwd = 1
   ) +
   geom_point(
-    size = 1.5,
+    size = 3,
     alpha = .75,
     position = position_jitter(
       seed = 1, width = .1
@@ -55,10 +56,10 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
   scale_fill_manual(values = c("real_crossings_all" = "#FF988E", "simulated_crossings_all" = "#A0B3C1")) +
   theme_classic() + 
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 14),
-    axis.title.y = element_text(size = 14, face = "bold"),
-    axis.text.y = element_text(size = 10),
+    plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.title.y = element_text(size = 30, face = "bold"),
+    axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
 all
@@ -106,10 +107,11 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
     ) +
   geom_boxplot(
     width = .25,
-    outlier.shape = NA
+    outlier.shape = NA,
+    lwd = 1
   ) +
   geom_point(
-    size = 1.5,
+    size = 3,
     alpha = .75,
     position = position_jitter(
       seed = 1, width = .1
@@ -124,10 +126,10 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
   scale_fill_manual(values = c("real_crossings_maj" = "#FF988E", "simulated_crossings_maj" = "#A0B3C1")) +
   theme_classic() + 
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 14),    
-    axis.title.y = element_text(size = 14, face = "bold"),
-    axis.text.y = element_text(size = 10),
+    plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.title.y = element_text(size = 30, face = "bold"),
+    axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
 maj
@@ -175,10 +177,11 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
     point_colour = NA) +
   geom_boxplot(
     width = .25,
-    outlier.shape = NA
+    outlier.shape = NA,
+    lwd = 1
   ) +
   geom_point(
-    size = 1.5,
+    size = 3,
     alpha = .75,
     position = position_jitter(
       seed = 1, width = .1
@@ -194,10 +197,10 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
   theme(axis.text.x = element_text(face = "bold", color = "black")) +
   theme_classic() + 
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 14),
-    axis.title.y = element_text(size = 14, face = "bold"),
-    axis.text.y = element_text(size = 10),
+    plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
+    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.title.y = element_text(size = 30, face = "bold"),
+    axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
 min
@@ -205,9 +208,13 @@ min
 # put density plots together ####
 
 title_grob <- textGrob("Bobcat Road Crossings Real vs Simulated", 
-                       gp = gpar(fontsize = 20, fontface = "bold"))
+                       gp = gpar(fontsize = 50, fontface = "bold"))
 
 grid.arrange(all, maj, min, ncol = 3, top = title_grob)
+
+# g <- arrangeGrob(all, maj, min, ncol = 3, top = title_grob)
+# plot(g)
+# ggsave(file="real_simulated_crossings.jpg", g)
 # 
 # # lollipop all ####
 # # Define custom colors
