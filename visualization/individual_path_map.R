@@ -11,7 +11,7 @@ library(foreach)
 library(doParallel)
 library(sf)
 library(raster)
-library(adehabitatHR)
+# library(adehabitatHR)
 library(tidyverse)
 library(geosphere)
 

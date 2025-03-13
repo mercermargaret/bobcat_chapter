@@ -15,7 +15,7 @@ library(foreach)
 library(doParallel)
 library(sf)
 library(raster)
-library(adehabitatHR)
+# library(adehabitatHR)
 library(tidyverse)
 library(geosphere)
 
@@ -24,6 +24,8 @@ rm(list=ls())
 
 # loading in gps data as csv
 individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/nala.csv")
+
+individual_gps <- individual_gps[1:50,]
 
 # making bobcat a telemetry object so ctmm recognizes it
 individual <- as.telemetry(individual_gps)

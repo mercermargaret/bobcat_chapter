@@ -67,7 +67,7 @@ bobcats <- bobcats %>%
 results$speed[is.infinite(results$speed)] <- NA
 
 # create bobcat_info dataframe and merge with results
-bobcat_info <- select(bobcats, SEX, NAME, ACTUAL_WEIGHT_LB)
+bobcat_info <- select(bobcats, SEX, NAME, ACTUAL_WEIGHT_LB, MORTALITY_LAT, MORTALITY_LONG)
 bobcat_info <- bobcat_info %>%
   filter(!is.na(SEX) & !is.na(NAME) & SEX != "" & NAME != "" & SEX != "U") 
 bobcat_info <- bobcat_info %>%

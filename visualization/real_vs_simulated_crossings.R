@@ -51,7 +51,7 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
   labs(title = NULL,
        y = "Number Crossings",
        x = NULL)  +
-  labs(title = "All Roads") +
+  labs(title = "(A) All Roads") +
   scale_x_discrete(labels = c("Simulated", "Real")) +
   scale_fill_manual(values = c("real_crossings_all" = "#FF988E", "simulated_crossings_all" = "#A0B3C1")) +
   theme_classic() + 
@@ -62,6 +62,7 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
+  # + ylim(-1000, 12500)
 all
 
 
@@ -121,7 +122,7 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
   labs(title = NULL,
        y = NULL,
        x = NULL) +
-  labs(title = "Major Roads") +
+  labs(title = "(B) Major Roads") +
   scale_x_discrete(labels = c("Simulated", "Real")) +
   scale_fill_manual(values = c("real_crossings_maj" = "#FF988E", "simulated_crossings_maj" = "#A0B3C1")) +
   theme_classic() + 
@@ -132,6 +133,7 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
+  # + ylim(-1000, 12500)
 maj
 
 # ggplot(long_maj, aes(x = type, y = value)) + 
@@ -192,7 +194,7 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
        y = NULL,
        x = NULL)  +
   scale_x_discrete(labels = c("Simulated", "Real")) +
-  labs(title = "Minor Roads") +
+  labs(title = "(C) Minor Roads") +
   scale_fill_manual(values = c("real_crossings_min" = "#FF988E", "simulated_crossings_min" = "#A0B3C1")) +
   theme(axis.text.x = element_text(face = "bold", color = "black")) +
   theme_classic() + 
@@ -203,14 +205,12 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
   )
+  #+ ylim(-1000, 12500)
 min
 
 # put density plots together ####
 
-title_grob <- textGrob("Bobcat Road Crossings Real vs Simulated", 
-                       gp = gpar(fontsize = 50, fontface = "bold"))
-
-grid.arrange(all, maj, min, ncol = 3, top = title_grob)
+grid.arrange(all, maj, min, ncol = 3)
 
 # g <- arrangeGrob(all, maj, min, ncol = 3, top = title_grob)
 # plot(g)

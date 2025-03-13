@@ -38,16 +38,16 @@ capture_locs_df_new <- capture_locs_df_new %>%
 # create year column
 capture_locs_df_new$Year <- as.character(year(mdy(capture_locs_df_new$CAPTURE_DATE)))
 
-# and add color column by year
-# Manually assign colors to each year
-year_to_color <- c(
-  "2020" = "red",       
-  "2021" = "blue",  
-  "2022" = "green",      
-  "2023" = "purple"
-)
-# Create a new column 'year_color' in the dataframe with the assigned colors
-capture_locs_df_new$year_color <- year_to_color[as.character(capture_locs_df_new$Year)]
+# # and add color column by year
+# # Manually assign colors to each year
+# year_to_color <- c(
+#   "2020" = "red",       
+#   "2021" = "blue",  
+#   "2022" = "green",      
+#   "2023" = "purple"
+# )
+# # Create a new column 'year_color' in the dataframe with the assigned colors
+# capture_locs_df_new$year_color <- year_to_color[as.character(capture_locs_df_new$Year)]
 
 
 
@@ -96,17 +96,16 @@ ggplot() +
           linewidth = 1, inherit.aes = FALSE, show.legend = FALSE) + 
   geom_sf(data = capture_locs, aes(color = Year),
           size = 6, inherit.aes = FALSE) +
-  labs(title = "Study Area", color = "Capture 
+  labs(color = "Capture 
 Locations") +
   scale_color_manual(values=c("#D81B60", "#F18527", "#FFC107", "yellow")) +
-  # scale_color_manual(values=c("#FB0896", "#1E88E5", "#FFC107", "#004D40")) +
   theme_minimal() + 
   theme(
-    plot.title = element_text(size = 30, face = "bold", hjust = 0.5, vjust = 0.5), 
     title = element_text(size = 20, face = "bold"),
     axis.text = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
     legend.text = element_text(size = 15)
-  )
-
+  ) +  # now add "A" and "B" for the protected areas x_x
+  annotate("text", x = -111.15, y = 32.27, label = "A", size = 13, hjust = 0) +
+  annotate("text", x = -111.075, y = 32.205, label = "B", size = 13, hjust = 0)

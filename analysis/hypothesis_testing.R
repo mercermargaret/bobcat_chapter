@@ -240,13 +240,13 @@ points_new <- points %>%
   filter(is.finite(Speed))
 
 # random effect of individual for just intercept
-model1 <- lmer(Speed ~ log(Distance) + (1 | Individual_ID), data = points_new)
-summary(model1)
-ggplot(data = points_new, aes(x = log(Distance), y = Speed)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+# model1 <- lmer(Speed ~ log(Distance) + (1 | Individual_ID), data = points_new)
+# summary(model1)
+# ggplot(data = points_new, aes(x = log(Distance), y = Speed)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", se = FALSE)
 # random effect of individual for slope and intercept
-model2 <- lmer(Speed ~ log(Distance) + (log(Distance) | Individual_ID), data = points_new)
+model2 <- lmerTest::lmer(Speed ~ log(Distance) + (log(Distance) | Individual_ID), data = points_new)
 summary(model2)
 plot(Speed ~ log(Distance) + (log(Distance)), data = points_new)
 
@@ -338,6 +338,14 @@ points(results$road_density_all[results$mortality == 1],
        pch = 19, col = "red")
 # there doesn't really seem to be a pattern
 
+# mort per crossing by road type
+# id road type BUT HOW????
+# ummmm maybe which the closest road is to the mort site...? I just don't know if this tells us a lot
+# number crossings major roads
+# number deaths major roads
+# number crossings minor roads
+# number deaths minor roads
+
 
 # sex ####
 
@@ -347,6 +355,10 @@ area_male <- (results$area_sq_km[results$SEX == "M"])
 area_female <- (results$area_sq_km[results$SEX == "F"])
 t1_sex <- t.test(area_male, area_female, na.rm = TRUE)
 print(t1_sex)
+min(area_male, na.rm = TRUE)
+max(area_male, na.rm = TRUE)
+min(area_female, na.rm = TRUE)
+max(area_female, na.rm = TRUE)
 mm <- mean(area_male, na.rm = TRUE)
 mf <- mean(area_female, na.rm = TRUE)
 md <- mm-mf
@@ -445,4 +457,17 @@ points(log(results$speed[results$SEX == "M"]),
        rep(0, sum(results$SEX == "M")),  
        pch = 19, col = "red")
 # no clear pattern
+
+# home range size changing with road density male vs female
+males <- results[results$SEX == "M",]
+females <- results[results$SEX == "F",]
+
+mad <- glm(males$area_sq_km ~ males$road_density_all)
+summary(mad)
+tab_model(mad)
+
+fad <- glm(females$area_sq_km ~ females$road_density_all)
+summary(fad)
+tab_model(fad)
+
 

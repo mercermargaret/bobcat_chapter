@@ -9,7 +9,6 @@ library(foreach)
 library(doParallel)
 library(sf)
 library(raster)
-library(adehabitatHR)
 library(tidyverse)
 library(geosphere)
 
@@ -41,7 +40,7 @@ individual_akde <- akde(individual, fits)
 #Return the basic statistics on the HR area
 summary(individual_akde)
 
-roads <- st_read("data/Roadmap_Wrangled")
+roads <- st_read("data/All_Roads/roads.shp")
 t(paste0("Roads loaded at ", Sys.time()))
 
 # Reproject the roads to match the tracking data

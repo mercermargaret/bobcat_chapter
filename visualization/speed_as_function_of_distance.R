@@ -25,6 +25,10 @@ points$Individual_ID <- sub("_.*", "", points$Individual_ID)
 points_new <- points %>%
   filter(is.finite(Speed))
 
+# trim outlier ("Jack")
+points_new <- points_new %>% 
+  filter(Individual_ID != "Jack")
+
 # plot(Speed ~ log(Distance) + (log(Distance)), data = points_new)
 
 # binned boxplot
@@ -36,8 +40,7 @@ points_new$speed_kmh <- points_new$Speed * 3.6
 # Create binned boxplots
 ggplot(points_new, aes(x = bins, y = speed_kmh)) +
   geom_boxplot(outlier.alpha = 0.2, outlier.size = 3, lwd = 2) +
-  labs(title = "Effect of Proximity to Roads on Bobcat Speed", 
-       x = "Distance to Nearest Road (m)", 
+  labs(x = "Distance to Nearest Road (m)", 
        y = "Instantaneous Speed (km/hr)") +
   scale_x_discrete(labels = c("<25", "25-50", "50-100", "100-200", "200-400", "400-800", "800-1600", "1600<")) +
   theme_minimal() +
