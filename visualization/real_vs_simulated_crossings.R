@@ -52,12 +52,12 @@ all <- ggplot(long, aes(x = type, y = value, fill = type)) +
        y = "Number Crossings",
        x = NULL)  +
   labs(title = "(A) All Roads") +
-  scale_x_discrete(labels = c("Simulated", "Real")) +
+  scale_x_discrete(labels = c("Simulated", "Observed")) +
   scale_fill_manual(values = c("real_crossings_all" = "#FF988E", "simulated_crossings_all" = "#A0B3C1")) +
   theme_classic() + 
   theme(
     plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.text.x = element_text(face = "bold", color = "black", size = 25),
     axis.title.y = element_text(size = 30, face = "bold"),
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
@@ -123,12 +123,12 @@ maj <- ggplot(long_maj, aes(x = type, y = value, fill = type)) +
        y = NULL,
        x = NULL) +
   labs(title = "(B) Major Roads") +
-  scale_x_discrete(labels = c("Simulated", "Real")) +
+  scale_x_discrete(labels = c("Simulated", "Observed")) +
   scale_fill_manual(values = c("real_crossings_maj" = "#FF988E", "simulated_crossings_maj" = "#A0B3C1")) +
   theme_classic() + 
   theme(
     plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.text.x = element_text(face = "bold", color = "black", size = 25),
     axis.title.y = element_text(size = 30, face = "bold"),
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'
@@ -193,14 +193,14 @@ min <- ggplot(long_min, aes(x = type, y = value, fill = type)) +
   labs(title = NULL,
        y = NULL,
        x = NULL)  +
-  scale_x_discrete(labels = c("Simulated", "Real")) +
+  scale_x_discrete(labels = c("Simulated", "Observed")) +
   labs(title = "(C) Minor Roads") +
   scale_fill_manual(values = c("real_crossings_min" = "#FF988E", "simulated_crossings_min" = "#A0B3C1")) +
   theme(axis.text.x = element_text(face = "bold", color = "black")) +
   theme_classic() + 
   theme(
     plot.title = element_text(size = 30, face = "bold", hjust = 0.5), 
-    axis.text.x = element_text(face = "bold", color = "black", size = 30),
+    axis.text.x = element_text(face = "bold", color = "black", size = 25),
     axis.title.y = element_text(size = 30, face = "bold"),
     axis.text.y = element_text(size = 20, face = "bold"),
     legend.position = 'none'

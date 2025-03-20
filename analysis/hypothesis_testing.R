@@ -144,11 +144,17 @@ hist(crossings_all$Passage_Distances)
 
 # get average simulated distance from crossing structure
 mean <- mean(sim_crossings$Average_Distance_From_Crossing_Structure_All, na.rm = TRUE)
+mean
 SE <- sd(sim_crossings$Average_Distance_From_Crossing_Structure_All, na.rm = TRUE) / sqrt(length(sim_crossings$Average_Distance_From_Crossing_Structure_All))
 # get CIs
 CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
+
+# t test to see whether distance from crossing structures are different sim vs real
+distances_real <- crossings_all$Passage_Distances
+distances_sim <- sim_crossings$Average_Distance_From_Crossing_Structure_All
+t.test(distances_real, distances_sim, paired = FALSE, na.rm = TRUE)
 
 # number crossings near structure for all roads
 median(results$percent_crossings_near_structure_all, na.rm = TRUE)
@@ -219,6 +225,18 @@ SE <- sd(results_trimmed$sim_percent_crossings_near_structure_all, na.rm = TRUE)
 CI <- SE * 1.96
 upper <- mean + CI
 lower <- mean - CI
+
+# t test between real crossings near structure vs simulated near structure
+sim <- results$sim_percent_crossings_near_structure_all
+real <- results$percent_crossings_near_structure_all
+t.test(sim, real, paired = TRUE, na.rm = TRUE)
+# not much of a difference (p = 0.06)
+
+# with outliers excluded
+sim_trimmed <- results_trimmed$sim_percent_crossings_near_structure_all
+real_trimmed <- results_trimmed$percent_crossings_near_structure_all
+t.test(sim_trimmed, real_trimmed, paired = TRUE, na.rm = TRUE)
+# still not much of a difference (p = 0.1)
 
 # hypothesis 3: Does bobcat movement behavior change when they are closer to roads? ####
 # test for relationship between distance of each point from road and instantaneous speed
