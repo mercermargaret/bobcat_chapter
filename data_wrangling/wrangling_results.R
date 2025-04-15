@@ -16,7 +16,7 @@ library(lmerTest)
 # load both range resident and non range resident data
 results_rr <- read.csv("results/results_rr.csv")
 results_non_rr <- read.csv("results/results_non_rr.csv")
-bobcats <- read.csv("data/BOBCATS IN TUCSON BOBCAT CAPTURE MASTER.xlsx - Sheet1.csv")
+bobcats <- read.csv("data/Capture_Info.csv")
 
 # combine individual information with results ####
 

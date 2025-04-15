@@ -96,7 +96,7 @@ ggplot() +
           show.legend = "line", inherit.aes = F) +  # Minor roads in dark grey
   geom_sf(data = high, aes(color = "Major Roads"), linewidth = 2, 
           show.legend = "line", inherit.aes = F) +     # Major roads in black
-  geom_sf(data = bridges_points, color = "darkorange", shape = 4, size = 4, stroke = 3, alpha = 0.75) +
+  geom_sf(data = bridges_points, color = "red", shape = 4, size = 4, stroke = 3, alpha = 0.75) +
   scale_color_manual(values = c("Minor Roads" = "darkgrey", "Major Roads" = "black")) +  # Manual color scale
   labs(
     color = "Road Type"  # Legend title
@@ -107,8 +107,8 @@ ggplot() +
     axis.title = element_blank(),
     panel.grid = element_blank(),
     legend.position = "right",
-    legend.text = element_text(size = 18),
-    legend.title = element_text(size = 20),
+    legend.text = element_text(size = 25),
+    legend.title = element_text(size = 35, face = "bold"),
     legend.key.size = unit(3, "cm")
   )
 

@@ -14,6 +14,7 @@ library(raster)
 # library(adehabitatHR)
 library(tidyverse)
 library(geosphere)
+library(ggplot2)
 
 # load data
 
@@ -131,7 +132,7 @@ ggplot() +
     axis.text = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
-    legend.position = "none"
+    legend.position = "right"
   )
 
 # plot path and roads ####
@@ -190,66 +191,75 @@ ggplot() +
     axis.text = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
-    legend.position = "none"
+    legend.position = "right"
   )
 
 # plot path, roads, crossings, and bridges ####
 
-# Create the combined plot
 ggplot() +
   # Plot path_2 first
-  geom_sf(data = path_sf, color = "#7390EE", linewidth = 1.5, alpha = 0.6) +
+  geom_sf(data = path_sf, aes(color = "Movement Path", linewidth = 1.5), alpha = 0.6) +
   
   # Plot minor roads in dark grey
   geom_sf(data = minor_roads_cropped, color = "black", 
           linewidth = 0.75, inherit.aes = FALSE) +
   
   # Plot major roads in black
-  geom_sf(data = major_roads_cropped, color = "black", 
-          linewidth = 2, inherit.aes = FALSE, show.legend = FALSE) + 
+  geom_sf(data = major_roads_cropped, aes(color = "Roads"), linewidth = 2, inherit.aes = FALSE, show.legend = TRUE) +
   
   geom_sf(data = crossings_new_min, color = "blue",
           size = 4, inherit.aes = FALSE) +
   
-  geom_sf(data = crossings_new_maj, color = "blue",
-          size = 4, inherit.aes = FALSE) +
+  # Plot crossings in blue (new major)
+  geom_sf(data = crossings_new_maj, aes(color = "Crossings"), size = 4, inherit.aes = FALSE) +
   
-  geom_sf(data = bridges_points_cropped, color = "red", shape = 4, size = 8, stroke = 4, alpha = 1,
-          linewidth = 10, inherit.aes = FALSE) +
+  # Plot bridges in red (points)
+  geom_sf(data = bridges_points_cropped, aes(color = "Crossing Structures"), shape = 4, size = 8, stroke = 4, alpha = 1, linewidth = 10, inherit.aes = FALSE) +
   
   # Customize plot appearance
-  theme_minimal() +
-    theme(
-      title = element_text("Real Path"), 
-      axis.text = element_blank(),
-      axis.title = element_blank(),
-      panel.grid = element_blank(),
-      legend.position = "none"
+  theme_minimal() + 
+  theme(
+    title = element_text("Real Path"),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "right"
+  ) +
+  scale_color_manual(
+    name = "Legend", 
+    values = c(
+      "Movement Path" = "#7390EE", 
+      "Roads" = "black", 
+      "Crossings" = "blue", 
+      "Crossing Structures" = "red"
     )
-# 
-# # example "crossing and structure" ####
-# # Load necessary library
-# library(ggplot2)
-# 
-# # Create some data for the line and points
-# line_data <- data.frame(x = c(0, 10), y = c(0, 10))  # coordinates for the line
-# point_data <- data.frame(x = 5, y = 5)  # coordinates for the red point
-# x_shape_data <- data.frame(x = 6, y = 6)  # coordinates for the 'X' shape
-# 
-# # Create the plot
-# ggplot() +
-#   geom_line(data = line_data, aes(x = x, y = y), color = "black", size = 1) +
-#   geom_point(data = point_data, aes(x = x, y = y), color = "blue", size = 3) +
-#   geom_point(data = x_shape_data, aes(x = x, y = y), color = "red", shape = 4, size = 4, stroke = 3, alpha = 1, inherit.aes = FALSE) +
-#   # Customize the theme
-#   theme_minimal() +
-#   theme(
-#     axis.text = element_blank(),
-#     axis.title = element_blank(),
-#     panel.grid = element_blank(),
-#     legend.position = "none"
-#   )
-# 
+  )
+
+
+# example "crossing and structure" ####
+# Load necessary library
+library(ggplot2)
+
+# Create some data for the line and points
+line_data <- data.frame(x = c(0, 10), y = c(0, 10))  # coordinates for the line
+x_shape_data <- data.frame(x = 3, y = 3)  # coordinates for the red point
+point_data <- data.frame(x = 5, y = 5)  # coordinates for the 'X' shape
+
+# Create the plot
+ggplot() +
+  geom_line(data = line_data, aes(x = x, y = y), color = "black", linewidth = 5) +
+  geom_point(data = point_data, aes(x = x, y = y), color = "blue", size = 20) +
+  geom_point(data = x_shape_data, aes(x = x, y = y), color = "black", shape = 1, size = 250) +
+  geom_point(data = x_shape_data, aes(x = x, y = y), color = "red", shape = 4, size = 20, stroke = 10, alpha = 1, inherit.aes = FALSE) +
+  # Customize the theme
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "right"
+  )
+
 
 
 # for loop to make plot for all individuals: ####
