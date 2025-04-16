@@ -23,14 +23,14 @@ load(ind_file)
 
 t(paste0("Data loaded at ", Sys.time()))
 
-# # test driving smaller subset of data
-# load("results/Model_Fit_Results/Jack_rr.Rda")
-# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/bunny.csv")
-# individual_gps <- individual_gps[1:50,]
-# individual <- as.telemetry(individual_gps)
-# individual$identity <- individual_gps$individual.identifier
-# slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
-# uere(individual) <- 7
+# test driving smaller subset of data
+load("results/Model_Fit_Results/Jack_rr.Rda")
+individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/jack.csv")
+individual_gps <- individual_gps[1:50,]
+individual <- as.telemetry(individual_gps)
+individual$identity <- individual_gps$individual.identifier
+slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
+uere(individual) <- 7
 
 # import roads and create home range ####
 # calculate the AKDE based on the best fit model
@@ -349,9 +349,15 @@ individual_sf <- st_as_sf(individual_df,
                           crs = st_crs(crs("epsg:4326")))
 
 # make empty dataframe to store results
-results_road_dist <- data.frame(Distance = rep(NA, length(individual$timestamp)), stringsAsFactors = FALSE)
-# and add "timestamp" column
-results_road_dist$Timestamp <- individual$timestamp
+results_dist_and_speed <- data.frame(
+  Distance_to_Any_Road = rep(NA, length(individual$timestamp)),
+  Distance_to_Minor_Road = NA,
+  Distance_to_Major_Road = NA,
+  stringsAsFactors = FALSE
+)
+# and add "timestamp" and "speed" columns
+results_dist_and_speed$Timestamp <- individual$timestamp
+results_dist_and_speed$Speed <- speeds$est
 
 # then get distance to nearest road (for loop to run through all points)
 for(i in 1:length(individual$timestamp)){
@@ -369,15 +375,53 @@ for(i in 1:length(individual$timestamp)){
   distance <- st_distance(point_i, nearest_road)
   
   # add distance to empty results dataframe
-  results_road_dist[i, 1] <- distance
+  results_dist_and_speed[i, 1] <- distance
   
 }
 
-t(paste0("Distance to nearest road calculated at ", Sys.time()))
-results_dist_and_speed <- results_road_dist
+# now distance to nearest MINOR road
+# make empty dataframe to store results
+for(i in 1:length(individual$timestamp)){
+  
+  # select i
+  point_i <- individual_sf[i, ]
+  
+  # Find the nearest road
+  nearest_road_idx <- st_nearest_feature(point_i, minor_roads)
+  
+  # Get the nearest road geometry
+  nearest_road <- minor_roads[nearest_road_idx, ]
+  
+  # Calculate the distance
+  distance <- st_distance(point_i, nearest_road)
+  
+  # add distance to empty results dataframe
+  results_dist_and_speed[i, 2] <- distance
+  
+}
 
-# make dataframe with one row per point and a column with instantaneous speed and a column with distance
-results_dist_and_speed$Speed <- speeds$est
+# and distance to nearest MAJOR road
+for(i in 1:length(individual$timestamp)){
+  
+  # select i
+  point_i <- individual_sf[i, ]
+  
+  # Find the nearest road
+  nearest_road_idx <- st_nearest_feature(point_i, major_roads)
+  
+  # Get the nearest road geometry
+  nearest_road <- major_roads[nearest_road_idx, ]
+  
+  # Calculate the distance
+  distance <- st_distance(point_i, nearest_road)
+  
+  # add distance to empty results dataframe
+  results_dist_and_speed[i, 3] <- distance
+  
+}
+
+t(paste0("Distance to nearest roads calculated at ", Sys.time()))
+
 
 # now calculate road density and home range size ####
 # grab home range size

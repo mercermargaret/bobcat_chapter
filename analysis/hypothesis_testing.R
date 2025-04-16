@@ -29,7 +29,7 @@ sqrt_real <- (sqrt(real))
 sqrt_sim <- (sqrt(simulated))
 t_sim <- t.test(sqrt_real, sqrt_sim, paired = TRUE, na.rm = TRUE)
 print(t_sim)
-# p-value = 0.09368
+# p-value = 0.04922
 
 mean(real)
 mean(simulated)
@@ -266,6 +266,7 @@ points_new <- points %>%
 # random effect of individual for slope and intercept
 model2 <- lmerTest::lmer(Speed ~ log(Distance) + (log(Distance) | Individual_ID), data = points_new)
 summary(model2)
+tab_model(model2)
 plot(Speed ~ log(Distance) + (log(Distance)), data = points_new)
 
 # log transform distance because distance from road is likely to only matter when distance is SMALL
@@ -279,8 +280,7 @@ ad <- glm(area ~ density)
 summary(ad)
 tab_model(ad)
 # this is still "nonsignificant" for only major roads 
-# (beta: 0.9427 pvalue: 0.12) why does this change every time x_x
-# new numbers: beta -0.01 pvalue 0.955 R = 0
+# (beta: -0.01261 pvalue: 0.95492) why does this change every time x_x
 
 # test for relationship between road density and average speed
 results_trimmed <- subset(results, !is.na(results$speed) & speed != Inf)
@@ -292,8 +292,7 @@ sd <- glm(speed ~ density)
 summary(sd)
 tab_model(sd)
 # even stronger for major roads!!
-# (beta: 1.24 pvalue: 0.00048) why does this change every time x_x
-# new numbers: beta 0.25 pvalue 0.03 R = 0.194
+# (beta: 0.2533 pvalue: 0.0274)
 
 # hm this is interesting. if speed and area covary, could have impact on analysis
 ggplot(results_trimmed, aes(x = area, y = speed)) +
