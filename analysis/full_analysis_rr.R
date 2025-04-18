@@ -23,14 +23,14 @@ load(ind_file)
 
 t(paste0("Data loaded at ", Sys.time()))
 
-# test driving smaller subset of data
-load("results/Model_Fit_Results/Jack_rr.Rda")
-individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/jack.csv")
-individual_gps <- individual_gps[1:50,]
-individual <- as.telemetry(individual_gps)
-individual$identity <- individual_gps$individual.identifier
-slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
-uere(individual) <- 7
+# # test driving smaller subset of data
+# load("results/Model_Fit_Results/Jack_rr.Rda")
+# individual_gps <- read.csv("data/Bobcat_Individuals/range_resident/jack.csv")
+# individual_gps <- individual_gps[1:50,]
+# individual <- as.telemetry(individual_gps)
+# individual$identity <- individual_gps$individual.identifier
+# slot(individual, "info")$identity <- individual_gps$individual.identifier[1]
+# uere(individual) <- 7
 
 # import roads and create home range ####
 # calculate the AKDE based on the best fit model
@@ -89,12 +89,6 @@ crossings_new_maj <- st_cast((crossings_multi_maj), to = "POINT")
 crossings_multi_min <- st_cast((road_crossings_min), to = "MULTIPOINT")
 crossings_new_min <- st_cast((crossings_multi_min), to = "POINT")
 
-# load bridges data
-bridges <- st_read("data/Bridges_As_Lines")
-t(paste0("Bridge data loaded at ", Sys.time()))
-# convert to get distance in m
-bridges_utc <- st_transform(bridges, crs = 32633)
-
 # plot map of path and roads ####
 pdf(paste0("results/Individual_Path_Maps/", individual@info$identity, ".pdf"))
 
@@ -111,6 +105,17 @@ title(main = paste(individual@info$identity, "Movement Path"),
       font.main = 1,
       cex.main = 0.85)
 dev.off()
+
+# load and prep crossing structure data ####
+# load crossing structure data 
+wash_crossing <- st_read("data/Wash_Crossings")
+road_crossing <- st_read("data/Road_Crossings")
+culvert_crossing <- st_read("data/Culvert_Crossings")
+t(paste0("Crossing structure data loaded at ", Sys.time()))
+# convert to get distance in m
+wash_utc <- st_transform(wash_crossing, crs = 32633)
+road_utc <- st_transform(road_crossing, crs = 32633)
+culvert_utc <- st_transform(culvert_crossing, crs = 32633)
 
 # crossing structures maj  ####
 
@@ -141,24 +146,29 @@ if(real_crossings_maj == 0) {
   # Empty vector to store results
   crossings_utc_maj <- st_transform(crossings_new_maj, crs = 32633)
   pass_dists_maj <- vector("numeric", length = length(crossings_utc_maj$OBJECTID))
+  closest_passage_type_maj <- vector("numeric", length = length(crossings_utc_maj$OBJECTID))
   for(i in 1:length(pass_dists_maj)){
     crossing_point <- crossings_utc_maj[i, ]
     # Find which point in the path is closest to the crossing location
-    dists <- st_distance(crossing_point, bridges_utc)
-    pass_dists_maj[i] <- min(dists)
+    dists <- st_distance(crossing_point, bridges_utc) # Calculate distances
+    min_idx <- which.min(dists) # Get index of the minimum distance
+    pass_dists_maj[i] <- dists[min_idx] # Store the minimum distance
+    closest_passage_type_maj[i] <- bridges_utc$wht_gs_[min_idx] # Also store the corresponding 'wht_gs_' value
   }
   
   head(pass_dists_maj)
+  head(closest_passage_type_maj)
   
   t(paste0("Pass distances maj generated at ", Sys.time()))
   
-  # Which crossings were within 20m (replace with my own median gps error!!!) of a road passage
+  # Which crossings of each type were within 7m of a road passage
   crossings_near_structure_maj <- length(which(pass_dists_maj <= 7))
   
   # merge crossings_new, cross_times, and pass_dists into one dataframe
   crossing_info_maj <- as.data.frame(crossings_new_maj)
   crossing_info_maj$Cross_Times <- cross_times_maj
   crossing_info_maj$Passage_Distances <- pass_dists_maj
+  crossing_info_maj$Passage_Type <- closest_passage_type_maj
 
 }
 
@@ -191,25 +201,30 @@ if(real_crossings_min == 0) {
   # Empty vector to store results
   crossings_utc_min <- st_transform(crossings_new_min, crs = 32633)
   pass_dists_min <- vector("numeric", length = length(crossings_utc_min$OBJECTID))
+  closest_passage_type_min <- vector("numeric", length = length(crossings_utc_min$OBJECTID))
   for(i in 1:length(pass_dists_min)){
     crossing_point <- crossings_utc_min[i, ]
     # Find which point in the path is closest to the crossing location
-    dists <- st_distance(crossing_point, bridges_utc)
-    pass_dists_min[i] <- min(dists)
+    dists <- st_distance(crossing_point, bridges_utc) # Calculate distances
+    min_idx <- which.min(dists) # Get index of the minimum distance
+    pass_dists_min[i] <- dists[min_idx] # Store the minimum distance
+    closest_passage_type_min[i] <- bridges_utc$wht_gs_[min_idx] # Also store the corresponding 'wht_gs_' value
   }
   
   head(pass_dists_min)
+  head(closest_passage_type_min)
   
   t(paste0("Pass distances min generated at ", Sys.time()))
   
-  # Which crossings were within 7m of a road passage
+  # Which crossings of each type were within 7m of a road passage
   crossings_near_structure_min <- length(which(pass_dists_min <= 7))
   
   # merge crossings_new, cross_times, and pass_dists into one dataframe
   crossing_info_min <- as.data.frame(crossings_new_min)
   crossing_info_min$Cross_Times <- cross_times_min
   crossing_info_min$Passage_Distances <- pass_dists_min
-
+  crossing_info_min$Passage_Type <- closest_passage_type_min
+  
 }
 
 # see how number of crossings and distance to crossing structures differs in simulations ####

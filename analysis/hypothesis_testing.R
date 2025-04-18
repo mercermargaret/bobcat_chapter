@@ -75,7 +75,7 @@ abline(0,1)
 
 
 
-# hypothesis 2: Do bobcats use culverts to cross roads? ####
+# hypothesis 2: Do bobcats use crossing structures to cross roads? ####
 
 # load major roads crossing info
 # pull and merge crossing info

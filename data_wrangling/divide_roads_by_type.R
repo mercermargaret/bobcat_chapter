@@ -1,4 +1,4 @@
-# import streets data and experiment 
+# divide roads into major vs minor vs all
 # margaret mercer
 # august 15, 2024
 
